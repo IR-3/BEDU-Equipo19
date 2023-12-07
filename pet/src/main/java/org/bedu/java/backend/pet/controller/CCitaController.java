@@ -28,4 +28,5 @@ public class CCitaController {
     public CCitaDTO save(@Valid @RequestBody CCitaDTOCreate data){
         return service.save(data);
     }
+    
 }
