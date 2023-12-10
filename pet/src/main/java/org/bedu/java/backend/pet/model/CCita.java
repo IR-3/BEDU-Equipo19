@@ -4,19 +4,31 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 @Getter
 @Setter
 @Entity
-@Table(name="cita")
+@Table( name = "citas" )
 public class CCita {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long lngID;
-    @Column(name = "fecha", length = 150, nullable = false)
-    private String strFecha;
-    @Column(name = "hora", nullable = false)
-    private String strHora;
-    @Column(name = "comentario")
-    private  String strComentario;
 
+  @Id
+  @GeneratedValue( strategy = GenerationType.AUTO )
+  private long  lngCitaID;
+
+  @Column( name = "fecha", nullable = false )
+  private LocalDate  clsDate;
+
+  @Column( name = "hora", nullable = false )
+  private LocalTime  clsTime;
+
+  @Column( name = "tratamiento" )
+  private String  strTratamiento;
+
+  @ManyToOne
+  private CMascota  clsMascota;
+
+  @ManyToOne
+  private CVeterinario  clsVeterinario;
 }

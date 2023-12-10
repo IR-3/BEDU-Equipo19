@@ -1,20 +1,13 @@
 package org.bedu.java.backend.pet.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 public class ErrorDTO {
 
-  public String strCode;
-  public String strMessage;
-  public Object objDetails;
-
-  public ErrorDTO( String code, String message, Object details ) {
-    strCode    = code;
-    strMessage = message;
-    objDetails = details;
-  }
-
+  private String code;
+  private String message;
+  private Object details;
 }

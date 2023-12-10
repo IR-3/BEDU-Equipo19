@@ -1,13 +1,21 @@
 package org.bedu.java.backend.pet.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 public class CCitaDTOCreate {
-    @NotBlank
-    private String strFecha;
-    @NotBlank
-    private String strHora;
-    private String strComentario;
+
+  @NotNull( message = "La fecha de la cita es obligatoria" )
+  private LocalDate  clsDate;
+
+  @NotNull( message = "La hora de la cita es obligatoria" )
+  private LocalTime  clsTime;
+
+  private String  strTratamiento;
+  private long    lngMascotaID;
+  private long    lngVetID;
 }

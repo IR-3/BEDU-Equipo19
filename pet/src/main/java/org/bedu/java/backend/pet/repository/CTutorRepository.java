@@ -1,9 +1,9 @@
 package org.bedu.java.backend.pet.repository;
 
-import org.bedu.java.backend.pet.model.CCita;
+import org.bedu.java.backend.pet.model.CTutor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CCitaRepository
-extends JpaRepository<CCita, Long> {}
+public interface CTutorRepository
+extends JpaRepository<CTutor, Long> {}
