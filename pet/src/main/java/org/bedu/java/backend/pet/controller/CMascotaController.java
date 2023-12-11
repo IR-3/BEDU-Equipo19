@@ -11,8 +11,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Endpoint de Mascotas", description = "CRUD de mascotas")
 @RestController
 @RequestMapping( "mascotas" )
 public class CMascotaController {
@@ -20,14 +24,14 @@ public class CMascotaController {
   @Autowired
   private CMascotaService  Service;
 
-
+  @Operation(summary = "Obtiene la lista de todos las mascotas")
   @GetMapping
   @ResponseStatus( HttpStatus.OK )
   public List<CMascotaDTO> RegresarLista() {
     return Service.RegresarLista();
   }
 
-
+  @Operation(summary = "Crea una nueva mascota")
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
   public CMascotaDTO Nuevo
@@ -36,6 +40,7 @@ public class CMascotaController {
     return Service.Nuevo( frontInfo );
   }
 
+  @Operation(summary = "Borra una mascota por medio de mascotaId")
   @DeleteMapping("/{mascotaId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public ResponseEntity<String> eliminarMascota(@PathVariable Long mascotaId){

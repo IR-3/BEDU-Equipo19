@@ -13,8 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Endpoint de Tutores", description = "CRUD de tutores")
 @RestController
 @RequestMapping( "tutores" )
 public class CTutorController {
@@ -22,12 +26,14 @@ public class CTutorController {
   @Autowired
   private CTutorService Service;
 
+  @Operation(summary = "Obtiene la lista de todos los tutores de las mascotas")
   @GetMapping
   @ResponseStatus( HttpStatus.OK )
   public List<CTutorDTO> RegresarLista() {
     return Service.RegresarLista();
   }
 
+  @Operation(summary = "Crea un nuevo tutor")
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
   public CTutorDTO Nuevo
@@ -40,6 +46,7 @@ public class CTutorController {
     return Service.Nuevo( frontInfo );
   }
 
+  @Operation(summary = "Borra un tutor por medio de tutorId")
   @DeleteMapping("/{tutorId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public ResponseEntity<String>EliminarTutor(@PathVariable Long tutorId){

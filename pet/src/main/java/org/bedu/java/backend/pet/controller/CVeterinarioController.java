@@ -13,8 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.List;
 
+@Tag(name = "Endpoint de veterinarios", description = "CRUD de veterinarios")
 @RestController
 @RequestMapping( "veterinarios" )
 public class CVeterinarioController {
@@ -22,12 +26,14 @@ public class CVeterinarioController {
   @Autowired
   private CVeterinarioService  Service;
 
+  @Operation(summary = "Obtiene la lista de todos los veterinarios")
   @GetMapping
   @ResponseStatus( HttpStatus.OK )
   public List<CVeterinarioDTO>  RegresarLista() {
     return Service.RegresarLista();
   }
 
+  @Operation(summary = "Crea un nuevo veterinario")
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
   public CVeterinarioDTO
@@ -40,6 +46,7 @@ public class CVeterinarioController {
     return Service.Nuevo( frontInfo );
   }
 
+  @Operation(summary = "Borra un veterinario por medio de veterinarioId")
   @DeleteMapping("/{veterinarioId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public ResponseEntity<String> EliminarVeterinario(@PathVariable Long veterinadoId){
