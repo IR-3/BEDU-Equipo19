@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CVeterinarioService {
@@ -29,5 +30,16 @@ public class CVeterinarioService {
     CVeterinario veterinario;
     veterinario = Repository.save( Mapper.EnModel( frontInfo ) );
     return Mapper.EnDTO( veterinario );
+  }
+
+  public boolean deleteById(Long veterinadoId){
+    Optional<CVeterinario>veterinarioOptional=Repository.findById(veterinadoId);
+
+    if(veterinarioOptional.isPresent()){
+      Repository.delete(veterinarioOptional.get());
+      return true;
+    }else{
+      return false;
+    }
   }
 }

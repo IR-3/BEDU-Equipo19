@@ -63,4 +63,18 @@ public class CCitaService {
              nuevo.getClsVeterinario() );
   }
 
+  //Eliminar la tabla
+  public boolean deleteById(Long citaId) {
+    Optional<CCita> citaOptional = Repository.findById(citaId);
+
+    if (citaOptional.isPresent()) {
+      // La cita existe, la eliminamos
+      Repository.delete(citaOptional.get());
+      return true;
+    } else {
+      // La cita no existe
+      return false;
+    }
+}
+
 }

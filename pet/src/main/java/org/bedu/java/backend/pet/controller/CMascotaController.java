@@ -7,7 +7,9 @@ import org.bedu.java.backend.pet.service.CMascotaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -33,4 +35,17 @@ public class CMascotaController {
   throws CMascotaTutorException {
     return Service.Nuevo( frontInfo );
   }
+
+  @DeleteMapping("/{mascotaId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public ResponseEntity<String> eliminarMascota(@PathVariable Long mascotaId){
+    boolean eliminado = Service.deleteById(mascotaId);
+
+    if(eliminado){
+      return ResponseEntity.ok("La mascota ha sido eliminada");
+    }else{
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Mascota no encontrada");
+    }
+  }
+
 }

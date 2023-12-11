@@ -9,7 +9,9 @@ import org.bedu.java.backend.pet.service.CTutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,5 +38,17 @@ public class CTutorController {
     persona.ValidarApellidos();
     persona.ValidarContacto();
     return Service.Nuevo( frontInfo );
+  }
+
+  @DeleteMapping("/{tutorId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public ResponseEntity<String>EliminarTutor(@PathVariable Long tutorId){
+    boolean eliminado = Service.deleteById(tutorId);
+
+    if(eliminado){
+      return ResponseEntity.ok("El tutor ha sido eliminado");
+    }else{
+      throw new  ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor no encontrado");
+    }
   }
 }

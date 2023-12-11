@@ -9,7 +9,9 @@ import org.bedu.java.backend.pet.service.CVeterinarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -36,5 +38,17 @@ public class CVeterinarioController {
     persona.ValidarApellidos();
     persona.ValidarContacto();
     return Service.Nuevo( frontInfo );
+  }
+
+  @DeleteMapping("/{veterinarioId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public ResponseEntity<String> EliminarVeterinario(@PathVariable Long veterinadoId){
+    boolean eliminado = Service.deleteById(veterinadoId);
+
+    if(eliminado){
+      return ResponseEntity.ok("El veterinario fue eliminado");
+    }else{
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND,"El veterinario no fue encontrado");
+    }
   }
 }
