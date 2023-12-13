@@ -61,6 +61,7 @@ public class CVeterinarioController {
     }
   }
 
+  @Operation(summary = "Actualiza un veterinario por medio de veterinarioId")
   @PutMapping("/{veterinarioId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void update(@PathVariable Long veterinarioId, @Valid @RequestBody UpdateVeterinarioDTO data) throws VeterinarioNotFoundException {

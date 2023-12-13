@@ -52,6 +52,7 @@ public class CCitaController {
     }
   }
 
+  @Operation(summary = "Actualiza una cita por medio de citaId")
   @PutMapping("/{citaId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void update(@PathVariable Long citaId, @Valid @RequestBody UpdateCitaDTO data) throws CitaNotFoundException {

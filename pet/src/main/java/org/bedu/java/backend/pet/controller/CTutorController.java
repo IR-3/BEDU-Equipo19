@@ -61,6 +61,7 @@ public class CTutorController {
     }
   }
 
+  @Operation(summary = "Actualiza un tutor por medio de tutorId")
   @PutMapping("/{tutorId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void update(@PathVariable Long tutorId, @Valid @RequestBody UpdateTutorDTO data) throws TutorNotFoundException {

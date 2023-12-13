@@ -55,6 +55,7 @@ public class CMascotaController {
     }
   }
 
+  @Operation(summary = "Actualiza mascota por medio de mascotaId")
   @PutMapping("/{mascotaId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void update(@PathVariable Long mascotaId, @Valid @RequestBody UpdateMascotaDTO data) throws MascotaNotFoundException {
