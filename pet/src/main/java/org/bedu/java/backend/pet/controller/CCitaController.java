@@ -4,6 +4,8 @@ import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
 import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
 import org.bedu.java.backend.pet.exception.CitaNotFoundException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 import org.bedu.java.backend.pet.service.CCitaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,8 @@ public class CCitaController {
   @Operation(summary = "Crea una nueva cita")
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public CCitaDTO Nuevo(@Valid @RequestBody CCitaDTOCreate frontInfo) {
+  public CCitaDTO Nuevo(@Valid @RequestBody CCitaDTOCreate frontInfo)
+  throws MascotaNotFoundException, VeterinarioNotFoundException {
     return Service.Nuevo(frontInfo);
   }
 

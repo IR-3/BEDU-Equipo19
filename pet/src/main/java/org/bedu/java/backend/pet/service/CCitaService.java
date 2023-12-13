@@ -4,6 +4,8 @@ import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
 import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
 import org.bedu.java.backend.pet.exception.CitaNotFoundException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 import org.bedu.java.backend.pet.mapper.CCitaMapper;
 import org.bedu.java.backend.pet.model.CCita;
 import org.bedu.java.backend.pet.model.CMascota;
@@ -45,17 +47,18 @@ public class CCitaService {
 
   // Agrega una cita a la base de datos
   @Transactional
-  public CCitaDTO Nuevo( CCitaDTOCreate frontInfo ) {
+  public CCitaDTO Nuevo( CCitaDTOCreate frontInfo )
+  throws MascotaNotFoundException, VeterinarioNotFoundException {
 
     Optional<CMascota> mascota;
     mascota = MascotaRepo.findById( frontInfo.getLngMascotaID() );
     if( !mascota.isPresent() )
-      return null;
+      throw new MascotaNotFoundException();
 
     Optional<CVeterinario> veterinario;
     veterinario = VetRepo.findById( frontInfo.getLngVetID() );
     if( !veterinario.isPresent() )
-      return null;
+      throw new VeterinarioNotFoundException();
  
     // Actualiza la tabla
     CCita nuevo = Repository.save( Mapper.EnModel

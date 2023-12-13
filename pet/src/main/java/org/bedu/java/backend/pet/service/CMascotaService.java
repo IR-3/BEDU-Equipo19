@@ -58,8 +58,8 @@ public class CMascotaService {
 
   //Eliminar la tabla
   @Transactional
-  public boolean deleteById(Long mascotaId){
-    Optional<CMascota> mascota = Repository.findById(mascotaId);
+  public boolean deleteById( Long mascotaId ) {
+    Optional<CMascota> mascota = Repository.findById( mascotaId );
 
     if(mascota.isPresent()){
       Repository.delete(mascota.get());
@@ -70,8 +70,9 @@ public class CMascotaService {
   }
 
   @Transactional
-  public void actualizarMascota(Long mascotaId, UpdateMascotaDTO data) throws MascotaNotFoundException {
-    Optional<CMascota> result = Repository.findById(mascotaId);
+  public void actualizarMascota( Long mascotaId, UpdateMascotaDTO data )
+  throws MascotaNotFoundException {
+    Optional<CMascota> result = Repository.findById( mascotaId );
     if (result.isEmpty()) {
       throw new MascotaNotFoundException();
     }
