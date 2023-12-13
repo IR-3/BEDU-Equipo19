@@ -8,13 +8,16 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
 @Mapper(
   componentModel = "spring",
   injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-  uses = CPersonaMapper.class)
+  uses = CPersonaMapper.class,
+  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  
 public interface CVeterinarioMapper {
 
   // Convierte Modelo en DTO

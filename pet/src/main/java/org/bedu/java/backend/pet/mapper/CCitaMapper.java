@@ -10,10 +10,11 @@ import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
   componentModel = "spring",
-  injectionStrategy = InjectionStrategy.CONSTRUCTOR )
+  injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface CCitaMapper {
 
   // Convierte Modelo en DTO
