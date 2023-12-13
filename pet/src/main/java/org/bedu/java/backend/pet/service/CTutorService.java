@@ -2,11 +2,12 @@ package org.bedu.java.backend.pet.service;
 
 import org.bedu.java.backend.pet.dto.CTutorDTO;
 import org.bedu.java.backend.pet.dto.CTutorDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateTutorDTO;
+import org.bedu.java.backend.pet.exception.TutorNotFoundException;
 import org.bedu.java.backend.pet.mapper.CTutorMapper;
 import org.bedu.java.backend.pet.model.CTutor;
 import org.bedu.java.backend.pet.repository.CTutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,6 +42,19 @@ public class CTutorService {
     }else{
       return false;
     }
+  }
+
+  public void actualizarTutor(Long tutorId, UpdateTutorDTO data) throws TutorNotFoundException {
+    Optional<CTutor> result = Repository.findById(tutorId);
+    if (result.isEmpty()) {
+      throw new TutorNotFoundException();
+    }
+
+    CTutor model = result.get();
+
+    Mapper.actualizarTutor(model, data);
+
+    Repository.save(model);
   }
 
 }

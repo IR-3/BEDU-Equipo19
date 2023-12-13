@@ -2,6 +2,8 @@ package org.bedu.java.backend.pet.controller;
 
 import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
+import org.bedu.java.backend.pet.exception.CitaNotFoundException;
 import org.bedu.java.backend.pet.service.CCitaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +50,12 @@ public class CCitaController {
     } else {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cita no encontrada");
     }
+  }
+
+  @PutMapping("/{citaId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void update(@PathVariable Long citaId, @Valid @RequestBody UpdateCitaDTO data) throws CitaNotFoundException {
+    Service.actualizarCita(citaId, data);
   }
 }
 

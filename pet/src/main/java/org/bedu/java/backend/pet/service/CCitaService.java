@@ -2,10 +2,11 @@ package org.bedu.java.backend.pet.service;
 
 import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
+import org.bedu.java.backend.pet.exception.CitaNotFoundException;
 import org.bedu.java.backend.pet.mapper.CCitaMapper;
 import org.bedu.java.backend.pet.model.CCita;
 import org.bedu.java.backend.pet.model.CMascota;
-import org.bedu.java.backend.pet.model.CTutor;
 import org.bedu.java.backend.pet.model.CVeterinario;
 import org.bedu.java.backend.pet.repository.CCitaRepository;
 import org.bedu.java.backend.pet.repository.CMascotaRepository;
@@ -75,6 +76,19 @@ public class CCitaService {
       // La cita no existe
       return false;
     }
-}
+  }
+
+  public void actualizarCita(Long citaId, UpdateCitaDTO data) throws CitaNotFoundException {
+    Optional<CCita> result = Repository.findById(citaId);
+    if (result.isEmpty()) {
+      throw new CitaNotFoundException();
+    }
+
+    CCita model = result.get();
+
+    Mapper.actualizarCita(model, data);
+
+    Repository.save(model);
+  }
 
 }

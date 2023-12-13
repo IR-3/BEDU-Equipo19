@@ -2,7 +2,9 @@ package org.bedu.java.backend.pet.controller;
 
 import org.bedu.java.backend.pet.dto.CMascotaDTO;
 import org.bedu.java.backend.pet.dto.CMascotaDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateMascotaDTO;
 import org.bedu.java.backend.pet.exception.CMascotaTutorException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
 import org.bedu.java.backend.pet.service.CMascotaService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,12 @@ public class CMascotaController {
     }else{
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Mascota no encontrada");
     }
+  }
+
+  @PutMapping("/{mascotaId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void update(@PathVariable Long mascotaId, @Valid @RequestBody UpdateMascotaDTO data) throws MascotaNotFoundException {
+    Service.actualizarMascota(mascotaId, data);
   }
 
 }

@@ -2,11 +2,13 @@ package org.bedu.java.backend.pet.service;
 
 import org.bedu.java.backend.pet.dto.CVeterinarioDTO;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateVeterinarioDTO;
 import org.bedu.java.backend.pet.mapper.CVeterinarioMapper;
 import org.bedu.java.backend.pet.model.CVeterinario;
 import org.bedu.java.backend.pet.repository.CVeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,4 +44,18 @@ public class CVeterinarioService {
       return false;
     }
   }
+
+  public void actualizarVeterinario(Long veterinarioId, UpdateVeterinarioDTO data) throws VeterinarioNotFoundException {
+    Optional<CVeterinario> result = Repository.findById(veterinarioId);
+    if (result.isEmpty()) {
+      throw new VeterinarioNotFoundException();
+    }
+
+    CVeterinario model = result.get();
+
+    Mapper.actualizarVeterinario(model, data);
+
+    Repository.save(model);
+  }
+
 }

@@ -3,8 +3,10 @@ package org.bedu.java.backend.pet.controller;
 import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
 import org.bedu.java.backend.pet.dto.CTutorDTO;
 import org.bedu.java.backend.pet.dto.CTutorDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateTutorDTO;
 import org.bedu.java.backend.pet.exception.CPersonaApellidoException;
 import org.bedu.java.backend.pet.exception.CPersonaContactoException;
+import org.bedu.java.backend.pet.exception.TutorNotFoundException;
 import org.bedu.java.backend.pet.service.CTutorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +59,11 @@ public class CTutorController {
     }else{
       throw new  ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor no encontrado");
     }
+  }
+
+  @PutMapping("/{tutorId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void update(@PathVariable Long tutorId, @Valid @RequestBody UpdateTutorDTO data) throws TutorNotFoundException {
+    Service.actualizarTutor(tutorId, data);
   }
 }

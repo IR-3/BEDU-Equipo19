@@ -1,7 +1,5 @@
 package org.bedu.java.backend.pet.dto;
 
-import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embedded;
 import jakarta.validation.Valid;

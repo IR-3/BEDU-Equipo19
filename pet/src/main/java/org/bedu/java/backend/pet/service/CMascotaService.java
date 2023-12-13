@@ -2,7 +2,9 @@ package org.bedu.java.backend.pet.service;
 
 import org.bedu.java.backend.pet.dto.CMascotaDTO;
 import org.bedu.java.backend.pet.dto.CMascotaDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateMascotaDTO;
 import org.bedu.java.backend.pet.exception.CMascotaTutorException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
 import org.bedu.java.backend.pet.mapper.CMascotaMapper;
 import org.bedu.java.backend.pet.model.CMascota;
 import org.bedu.java.backend.pet.model.CTutor;
@@ -11,7 +13,6 @@ import org.bedu.java.backend.pet.repository.CTutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +64,19 @@ public class CMascotaService {
     }else{
       return false;
     }
+  }
+
+  public void actualizarMascota(Long mascotaId, UpdateMascotaDTO data) throws MascotaNotFoundException {
+    Optional<CMascota> result = Repository.findById(mascotaId);
+    if (result.isEmpty()) {
+      throw new MascotaNotFoundException();
+    }
+
+    CMascota model = result.get();
+
+    Mapper.actualizarMascota(model, data);
+
+    Repository.save(model);
   }
 
 

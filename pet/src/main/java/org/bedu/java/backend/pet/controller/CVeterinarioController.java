@@ -3,8 +3,10 @@ package org.bedu.java.backend.pet.controller;
 import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTO;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateVeterinarioDTO;
 import org.bedu.java.backend.pet.exception.CPersonaApellidoException;
 import org.bedu.java.backend.pet.exception.CPersonaContactoException;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 import org.bedu.java.backend.pet.service.CVeterinarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,4 +60,11 @@ public class CVeterinarioController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,"El veterinario no fue encontrado");
     }
   }
+
+  @PutMapping("/{veterinarioId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void update(@PathVariable Long veterinarioId, @Valid @RequestBody UpdateVeterinarioDTO data) throws VeterinarioNotFoundException {
+    Service.actualizarVeterinario(veterinarioId, data);
+  }
+
 }

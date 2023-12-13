@@ -2,12 +2,14 @@ package org.bedu.java.backend.pet.mapper;
 
 import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
 import org.bedu.java.backend.pet.model.CCita;
 import org.bedu.java.backend.pet.model.CMascota;
 import org.bedu.java.backend.pet.model.CVeterinario;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(
   componentModel = "spring",
@@ -28,4 +30,7 @@ public interface CCitaMapper {
     CCitaDTOCreate frontInfo,
     CMascota mascota,
     CVeterinario veterinario );
+
+  @Mapping(target = "lngCitaID", ignore = true)
+  void actualizarCita(@MappingTarget CCita model, UpdateCitaDTO dto);
 }
