@@ -11,11 +11,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Data
 public class CCitaDTOCreate {
 
-  @Schema(description = "Fecha de la cita.", example = "2024-01-22")
+  @Schema( description = "Fecha de la cita.", example = "2024-01-22" )
   @NotNull( message = "La fecha de la cita es obligatoria" )
   private LocalDate  clsDate;
 
-  @Schema(description = "Hora de la cita.", example = "14:30:00")
+  @Schema( description = "Hora de la cita.", example = "14:30:00" )
   @NotNull( message = "La hora de la cita es obligatoria" )
   private LocalTime  clsTime;
 

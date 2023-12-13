@@ -1,5 +1,6 @@
 package org.bedu.java.backend.pet.dto;
 
+import jakarta.validation.constraints.Email;
 import org.bedu.java.backend.pet.exception.CPersonaApellidoException;
 import org.bedu.java.backend.pet.exception.CPersonaContactoException;
 
@@ -26,6 +27,7 @@ public class CPersonaDTOCreate {
 
   // Debe existir al menos un medio de contacto
   @Schema(description = "Correo de la persona.", example = "sofia56@gmail.com")
+  @Email( message = "Error en el formato de correo electronico" )
   private String  strEmail;
 
   @Schema(description = "Teléfono de la persona.", example = "5312453645")

@@ -20,7 +20,9 @@ public class CVeterinario {
   private CPersona  clsPersona;
 
   // El veterinario debe tener cedula profesional
-  @Column( name = "cedula", nullable = false, length = 16 )
+  @Column(
+    name = "cedula", nullable = false,
+    length = 16, unique = true )
   private String  strCedula;
 
   // Un veterinario puede no tener especialidad
