@@ -10,6 +10,7 @@ import org.bedu.java.backend.pet.model.CTutor;
 import org.bedu.java.backend.pet.repository.CTutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,13 @@ public class CTutorService {
   }
 
   // Agrega un tutor a la base de datos
+  @Transactional
   public CTutorDTO Nuevo( CTutorDTOCreate frontInfo ) {
     CTutor tutor = Repository.save( Mapper.EnModelo( frontInfo ) );
     return Mapper.EnDTO( tutor );
   }
 
+  @Transactional
   public boolean deleteById(Long tutorId){
     Optional<CTutor>tutorOptional=Repository.findById(tutorId);
 
@@ -45,6 +48,7 @@ public class CTutorService {
     }
   }
 
+  @Transactional
   public void actualizarTutor(Long tutorId, UpdateTutorDTO data) throws TutorNotFoundException {
         Optional<CTutor> result = Repository.findById(tutorId);
         if (result.isEmpty()) {

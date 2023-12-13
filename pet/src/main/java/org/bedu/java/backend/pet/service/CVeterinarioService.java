@@ -9,6 +9,7 @@ import org.bedu.java.backend.pet.model.CVeterinario;
 import org.bedu.java.backend.pet.repository.CVeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 
 import java.util.List;
@@ -29,12 +30,14 @@ public class CVeterinarioService {
   }
 
   // Agrega un veterinario a la base de datos
+  @Transactional
   public CVeterinarioDTO Nuevo( CVeterinarioDTOCreate frontInfo ) {
     CVeterinario veterinario;
     veterinario = Repository.save( Mapper.EnModel( frontInfo ) );
     return Mapper.EnDTO( veterinario );
   }
 
+  @Transactional
   public boolean deleteById(Long veterinadoId){
     Optional<CVeterinario>veterinarioOptional=Repository.findById(veterinadoId);
 
@@ -46,6 +49,7 @@ public class CVeterinarioService {
     }
   }
 
+  @Transactional
   public void actualizarVeterinario(Long veterinarioId, UpdateVeterinarioDTO dto) throws VeterinarioNotFoundException {
     Optional<CVeterinario> result = Repository.findById(veterinarioId);
     if (result.isEmpty()) {

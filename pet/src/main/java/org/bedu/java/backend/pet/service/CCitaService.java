@@ -13,6 +13,7 @@ import org.bedu.java.backend.pet.repository.CMascotaRepository;
 import org.bedu.java.backend.pet.repository.CVeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +44,7 @@ public class CCitaService {
 
 
   // Agrega una cita a la base de datos
+  @Transactional
   public CCitaDTO Nuevo( CCitaDTOCreate frontInfo ) {
 
     Optional<CMascota> mascota;
@@ -65,6 +67,7 @@ public class CCitaService {
   }
 
   //Eliminar la tabla
+  @Transactional
   public boolean deleteById(Long citaId) {
     Optional<CCita> citaOptional = Repository.findById(citaId);
 
@@ -79,6 +82,7 @@ public class CCitaService {
   }
 
   //Actualizar tabla cita
+  @Transactional
   public void actualizarCita(Long citaId, UpdateCitaDTO data) throws CitaNotFoundException {
     Optional<CCita> result = Repository.findById(citaId);
     if (result.isEmpty()) {

@@ -12,6 +12,7 @@ import org.bedu.java.backend.pet.repository.CMascotaRepository;
 import org.bedu.java.backend.pet.repository.CTutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class CMascotaService {
 
 
   // Agrega una mascota a la base de datos
+  @Transactional
   public CMascotaDTO Nuevo( CMascotaDTOCreate frontInfo )
   throws CMascotaTutorException {
 
@@ -55,6 +57,7 @@ public class CMascotaService {
   }
 
   //Eliminar la tabla
+  @Transactional
   public boolean deleteById(Long mascotaId){
     Optional<CMascota> mascota = Repository.findById(mascotaId);
 
@@ -66,6 +69,7 @@ public class CMascotaService {
     }
   }
 
+  @Transactional
   public void actualizarMascota(Long mascotaId, UpdateMascotaDTO data) throws MascotaNotFoundException {
     Optional<CMascota> result = Repository.findById(mascotaId);
     if (result.isEmpty()) {
