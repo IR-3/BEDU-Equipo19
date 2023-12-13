@@ -54,7 +54,7 @@ public class CCitaService {
     veterinario = VetRepo.findById( frontInfo.getLngVetID() );
     if( !veterinario.isPresent() )
       return null;
-
+ 
     // Actualiza la tabla
     CCita nuevo = Repository.save( Mapper.EnModel
                   ( frontInfo, mascota.get(), veterinario.get() ) );
@@ -78,6 +78,7 @@ public class CCitaService {
     }
   }
 
+  //Actualizar tabla cita
   public void actualizarCita(Long citaId, UpdateCitaDTO data) throws CitaNotFoundException {
     Optional<CCita> result = Repository.findById(citaId);
     if (result.isEmpty()) {
@@ -86,7 +87,26 @@ public class CCitaService {
 
     CCita model = result.get();
 
-    Mapper.actualizarCita(model, data);
+    //actualizar datos de Cita
+    if ( data.getClsDate() != null){
+      model.setClsDate(data.getClsDate());
+    }
+
+    if( data.getClsTime() != null){
+      model.setClsTime(data.getClsTime());
+    }
+
+    if( data.getStrTratamiento() != null){
+      model.setStrTratamiento(data.getStrTratamiento());
+    }
+
+    if (data.getClsMascota() != null){
+      model.setClsMascota(data.getClsMascota());
+    }
+
+    if(data.getClsVeterinario() != null){
+      model.setClsVeterinario(data.getClsVeterinario());
+    }
 
     Repository.save(model);
   }

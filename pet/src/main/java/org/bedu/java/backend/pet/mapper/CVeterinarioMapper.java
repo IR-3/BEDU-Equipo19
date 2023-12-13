@@ -32,6 +32,6 @@ public interface CVeterinarioMapper {
   CVeterinario EnModel(CVeterinarioDTOCreate frontInfo);
 
   @Mapping(target = "lngVetID", ignore = true)
-  void actualizarVeterinario(@MappingTarget CVeterinario model, UpdateVeterinarioDTO dto);
+  void actualizarVeterinario(@MappingTarget CVeterinario veterinario, UpdateVeterinarioDTO dto);
 
 }

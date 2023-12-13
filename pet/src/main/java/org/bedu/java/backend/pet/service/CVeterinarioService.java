@@ -4,6 +4,7 @@ import org.bedu.java.backend.pet.dto.CVeterinarioDTO;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
 import org.bedu.java.backend.pet.dto.UpdateVeterinarioDTO;
 import org.bedu.java.backend.pet.mapper.CVeterinarioMapper;
+import org.bedu.java.backend.pet.model.CPersona;
 import org.bedu.java.backend.pet.model.CVeterinario;
 import org.bedu.java.backend.pet.repository.CVeterinarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +46,48 @@ public class CVeterinarioService {
     }
   }
 
-  public void actualizarVeterinario(Long veterinarioId, UpdateVeterinarioDTO data) throws VeterinarioNotFoundException {
+  public void actualizarVeterinario(Long veterinarioId, UpdateVeterinarioDTO dto) throws VeterinarioNotFoundException {
     Optional<CVeterinario> result = Repository.findById(veterinarioId);
     if (result.isEmpty()) {
-      throw new VeterinarioNotFoundException();
+        throw new VeterinarioNotFoundException();
     }
 
-    CVeterinario model = result.get();
+    CVeterinario veterinario = result.get();
 
-    Mapper.actualizarVeterinario(model, data);
+    // Actualizar clsPersona solo si se proporciona en el DTO
+    if (dto.getClsPersona() != null) {
+        CPersona personaDTO = dto.getClsPersona();
+        CPersona persona = veterinario.getClsPersona();
 
-    Repository.save(model);
+        // Actualizar campos individuales de clsPersona si se proporcionan
+        if (personaDTO.getStrNombre() != null) {
+            persona.setStrNombre(personaDTO.getStrNombre());
+        }
+        if (personaDTO.getStrPaterno() != null) {
+            persona.setStrPaterno(personaDTO.getStrPaterno());
+        }
+        if (personaDTO.getStrMaterno() != null) {
+            persona.setStrMaterno(personaDTO.getStrMaterno());
+        }
+        if (personaDTO.getStrEmail() != null) {
+            persona.setStrEmail(personaDTO.getStrEmail());
+        }
+        if (personaDTO.getStrTelefono() != null) {
+            persona.setStrTelefono(personaDTO.getStrTelefono());
+        }
+    }
+
+    // Actualizar strCedula si se proporciona en el DTO
+    if (dto.getStrCedula() != null) {
+        veterinario.setStrCedula(dto.getStrCedula());
+    }
+
+    // Actualizar strEspecialidad si se proporciona en el DTO
+    if (dto.getStrEspecialidad() != null) {
+        veterinario.setStrEspecialidad(dto.getStrEspecialidad());
+    }
+
+    Repository.save(veterinario);
   }
 
 }

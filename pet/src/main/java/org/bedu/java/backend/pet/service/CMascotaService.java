@@ -74,7 +74,20 @@ public class CMascotaService {
 
     CMascota model = result.get();
 
-    Mapper.actualizarMascota(model, data);
+    // Actualizar campos de mascota
+    if (data.getStrNombre() != null) {
+      model.setStrNombre(data.getStrNombre());
+    }
+    if (data.getStrEspecie() != null) {
+        model.setStrEspecie(data.getStrEspecie());
+    }
+    if (data.getStrRaza() != null) {
+        model.setStrRaza(data.getStrRaza());
+    }
+
+    if (data.getClsTutor() != null) {
+      model.setClsTutor(data.getClsTutor());
+    }
 
     Repository.save(model);
   }

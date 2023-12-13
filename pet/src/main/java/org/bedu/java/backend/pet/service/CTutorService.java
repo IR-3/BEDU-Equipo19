@@ -5,6 +5,7 @@ import org.bedu.java.backend.pet.dto.CTutorDTOCreate;
 import org.bedu.java.backend.pet.dto.UpdateTutorDTO;
 import org.bedu.java.backend.pet.exception.TutorNotFoundException;
 import org.bedu.java.backend.pet.mapper.CTutorMapper;
+import org.bedu.java.backend.pet.model.CPersona;
 import org.bedu.java.backend.pet.model.CTutor;
 import org.bedu.java.backend.pet.repository.CTutorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,16 +46,37 @@ public class CTutorService {
   }
 
   public void actualizarTutor(Long tutorId, UpdateTutorDTO data) throws TutorNotFoundException {
-    Optional<CTutor> result = Repository.findById(tutorId);
-    if (result.isEmpty()) {
-      throw new TutorNotFoundException();
+        Optional<CTutor> result = Repository.findById(tutorId);
+        if (result.isEmpty()) {
+            throw new TutorNotFoundException();
+        }
+
+        CTutor tutor = result.get();
+
+        // Actualizar clsTutor solo si se proporciona en el DTO
+        if (data.getClsTutor() != null) {
+            CPersona tutorDTO = data.getClsTutor();
+            CPersona tutorPersona = tutor.getClsTutor();
+
+            // Actualizar campos individuales de clsTutor si se proporcionan
+            if (tutorDTO.getStrNombre() != null) {
+                tutorPersona.setStrNombre(tutorDTO.getStrNombre());
+            }
+            if (tutorDTO.getStrPaterno() != null) {
+                tutorPersona.setStrPaterno(tutorDTO.getStrPaterno());
+            }
+            if (tutorDTO.getStrMaterno() != null) {
+                tutorPersona.setStrMaterno(tutorDTO.getStrMaterno());
+            }
+            if (tutorDTO.getStrEmail() != null) {
+                tutorPersona.setStrEmail(tutorDTO.getStrEmail());
+            }
+            if (tutorDTO.getStrTelefono() != null) {
+                tutorPersona.setStrTelefono(tutorDTO.getStrTelefono());
+            }
+        }
+
+        Repository.save(tutor);
     }
-
-    CTutor model = result.get();
-
-    Mapper.actualizarTutor(model, data);
-
-    Repository.save(model);
-  }
 
 }

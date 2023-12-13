@@ -17,4 +17,5 @@ public interface CPersonaMapper {
 
   // Convierte CPersonaDTOCreate en modelo
   CPersona EnModelo( CPersonaDTOCreate personaDTO );
+
 }
