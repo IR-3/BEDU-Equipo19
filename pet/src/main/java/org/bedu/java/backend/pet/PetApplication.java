@@ -4,11 +4,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
+import org.bedu.java.backend.pet.dto.CMascotaDTOCreate;
 import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
 import org.bedu.java.backend.pet.dto.CTutorDTOCreate;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
+import org.bedu.java.backend.pet.service.CCitaService;
+import org.bedu.java.backend.pet.service.CMascotaService;
 import org.bedu.java.backend.pet.service.CTutorService;
 import org.bedu.java.backend.pet.service.CVeterinarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,12 +49,20 @@ public class PetApplication implements CommandLineRunner {
 	@Autowired
 	private CVeterinarioService cVeterinarioService;
 
+	@Autowired
+	private CMascotaService cMascotaService;
+
+	@Autowired
+	private CCitaService cCitaService;
+
 	@Override
 	@Transactional
 	public void run(String... args) throws Exception
 	{
 		cargarTutores();
+		cargarMascotas();
 		cargarVeterinarios();
+		cargarCitas();
 	}
 
 	private void cargarTutores() throws IOException
@@ -109,9 +124,7 @@ public class PetApplication implements CommandLineRunner {
 					{
 						continue;
 					}
-					//CTutorDTOCreate tutorDTO = new CTutorDTOCreate();
-					//CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
-					//personaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
+
 					CVeterinarioDTOCreate veterinarioDTO = new CVeterinarioDTOCreate();
 					CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
 
@@ -126,9 +139,117 @@ public class PetApplication implements CommandLineRunner {
 					veterinarioDTO.setStrEspecialidad(getStringCellValue(row.getCell(6)));
 					
 					cVeterinarioService.Nuevo(veterinarioDTO);
-					//tutorDTO.setClsTutor(personaDTO);
-					//cTutorService.Nuevo(tutorDTO);
-					//cVeterinarioService.
+				}
+			}
+		}catch (IOException e) 
+		{
+			e.printStackTrace();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	private void cargarMascotas() throws IOException
+	{
+
+		Resource resource = new ClassPathResource("Mascotas.xlsx");
+		File file = resource.getFile();
+
+		try (FileInputStream fileInputStream = new FileInputStream(file))
+		{
+			
+			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
+			{
+				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+
+				for(Row row : sheet)
+				{
+					if(row.getRowNum() == 0)
+					{
+						continue;
+					}
+
+					CMascotaDTOCreate mascotaDTO = new CMascotaDTOCreate();
+
+					
+					mascotaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
+					mascotaDTO.setStrEspecie(getStringCellValue(row.getCell(1)));
+					mascotaDTO.setStrRaza(getStringCellValue(row.getCell(2)));
+					String IdTutor = getStringCellValue(row.getCell(3));
+					if(IdTutor != null && !IdTutor.isEmpty())
+					{
+					mascotaDTO.setLngTutorID(Long.parseLong(IdTutor));
+					}
+
+					if (mascotaDTO.getStrNombre() != null) {
+						cMascotaService.Nuevo(mascotaDTO);
+					}
+				}
+			}
+		}catch (IOException e) 
+		{
+			e.printStackTrace();
+		}catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	private void cargarCitas() throws IOException
+	{
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+	
+
+		Resource resource = new ClassPathResource("Citas.xlsx");
+		File file = resource.getFile();
+
+		try (FileInputStream fileInputStream = new FileInputStream(file))
+		{
+			
+			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
+			{
+				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+
+				for (Row row : sheet) {
+					if (row.getRowNum() == 0) {
+						continue;
+					}
+				
+					CCitaDTOCreate citaDTO = new CCitaDTOCreate();
+				
+					// Asegúrate de que las celdas que contienen las fechas y horas no estén vacías
+					String fechaString = getStringCellValue(row.getCell(0));
+					String horaString = getStringCellValue(row.getCell(1));
+				
+					if (fechaString != null && !fechaString.isEmpty() && horaString != null && !horaString.isEmpty()) {
+						System.out.println("Fecha: " + fechaString + ", Hora: " + horaString);
+				
+						citaDTO.setClsDate(LocalDate.parse(fechaString, dateFormatter));
+						citaDTO.setClsTime(LocalTime.parse(horaString, timeFormatter));
+					} else {
+						// Manejar el caso en que la fecha o la hora sean nulas o vacías
+						System.err.println("ADVERTENCIA: La fecha o la hora son nulas o vacías.");
+					}
+				
+					citaDTO.setStrTratamiento(getStringCellValue(row.getCell(2)));
+					String MascotaId = getStringCellValue(row.getCell(3));
+					if(MascotaId != null && !MascotaId.isEmpty())
+					{
+					citaDTO.setLngMascotaID(Long.parseLong(MascotaId));
+					}
+					String VeterinarioId = getStringCellValue(row.getCell(4));
+					if(VeterinarioId != null && !VeterinarioId.isEmpty())
+					{
+					citaDTO.setLngVetID(Long.parseLong(VeterinarioId));
+					}
+					if(citaDTO.getLngVetID() != 0)
+					{
+					cCitaService.Nuevo(citaDTO);
+					}
 				}
 			}
 		}catch (IOException e) 
