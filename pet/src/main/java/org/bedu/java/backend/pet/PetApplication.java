@@ -124,9 +124,7 @@ public class PetApplication implements CommandLineRunner {
 					{
 						continue;
 					}
-					//CTutorDTOCreate tutorDTO = new CTutorDTOCreate();
-					//CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
-					//personaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
+
 					CVeterinarioDTOCreate veterinarioDTO = new CVeterinarioDTOCreate();
 					CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
 
@@ -141,9 +139,6 @@ public class PetApplication implements CommandLineRunner {
 					veterinarioDTO.setStrEspecialidad(getStringCellValue(row.getCell(6)));
 					
 					cVeterinarioService.Nuevo(veterinarioDTO);
-					//tutorDTO.setClsTutor(personaDTO);
-					//cTutorService.Nuevo(tutorDTO);
-					//cVeterinarioService.
 				}
 			}
 		}catch (IOException e) 
@@ -182,7 +177,11 @@ public class PetApplication implements CommandLineRunner {
 					mascotaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
 					mascotaDTO.setStrEspecie(getStringCellValue(row.getCell(1)));
 					mascotaDTO.setStrRaza(getStringCellValue(row.getCell(2)));
-					mascotaDTO.setLngTutorID(Long.parseLong( getStringCellValue(row.getCell(3))));
+					String IdTutor = getStringCellValue(row.getCell(3));
+					if(IdTutor != null && !IdTutor.isEmpty())
+					{
+					mascotaDTO.setLngTutorID(Long.parseLong(IdTutor));
+					}
 
 					if (mascotaDTO.getStrNombre() != null) {
 						cMascotaService.Nuevo(mascotaDTO);
@@ -201,8 +200,9 @@ public class PetApplication implements CommandLineRunner {
 
 	private void cargarCitas() throws IOException
 	{
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-		DateTimeFormatter formatterH = DateTimeFormatter.ofPattern("HH:mm:ss");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+	
 
 		Resource resource = new ClassPathResource("Citas.xlsx");
 		File file = resource.getFile();
@@ -214,22 +214,42 @@ public class PetApplication implements CommandLineRunner {
 			{
 				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
 
-				for(Row row : sheet)
-				{
-					if(row.getRowNum() == 0)
-					{
+				for (Row row : sheet) {
+					if (row.getRowNum() == 0) {
 						continue;
 					}
-
-					CCitaDTOCreate citaDTO = new CCitaDTOCreate();
-
-					citaDTO.setClsDate(LocalDate.parse(getStringCellValue(row.getCell(0)), formatter));
-					citaDTO.setClsTime(LocalTime.parse(getStringCellValue(row.getCell(1)), formatterH));
-					citaDTO.setStrTratamiento(getStringCellValue(row.getCell(2)));
-					citaDTO.setLngMascotaID(Long.parseLong(getStringCellValue(row.getCell(3))));
-					citaDTO.setLngVetID(Long.parseLong(getStringCellValue(row.getCell(4))));
 				
+					CCitaDTOCreate citaDTO = new CCitaDTOCreate();
+				
+					// Asegúrate de que las celdas que contienen las fechas y horas no estén vacías
+					String fechaString = getStringCellValue(row.getCell(0));
+					String horaString = getStringCellValue(row.getCell(1));
+				
+					if (fechaString != null && !fechaString.isEmpty() && horaString != null && !horaString.isEmpty()) {
+						System.out.println("Fecha: " + fechaString + ", Hora: " + horaString);
+				
+						citaDTO.setClsDate(LocalDate.parse(fechaString, dateFormatter));
+						citaDTO.setClsTime(LocalTime.parse(horaString, timeFormatter));
+					} else {
+						// Manejar el caso en que la fecha o la hora sean nulas o vacías
+						System.err.println("ADVERTENCIA: La fecha o la hora son nulas o vacías.");
+					}
+				
+					citaDTO.setStrTratamiento(getStringCellValue(row.getCell(2)));
+					String MascotaId = getStringCellValue(row.getCell(3));
+					if(MascotaId != null && !MascotaId.isEmpty())
+					{
+					citaDTO.setLngMascotaID(Long.parseLong(MascotaId));
+					}
+					String VeterinarioId = getStringCellValue(row.getCell(4));
+					if(VeterinarioId != null && !VeterinarioId.isEmpty())
+					{
+					citaDTO.setLngVetID(Long.parseLong(VeterinarioId));
+					}
+					if(citaDTO.getLngVetID() != 0)
+					{
 					cCitaService.Nuevo(citaDTO);
+					}
 				}
 			}
 		}catch (IOException e) 
