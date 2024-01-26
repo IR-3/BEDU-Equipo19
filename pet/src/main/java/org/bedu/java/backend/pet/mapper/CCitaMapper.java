@@ -34,4 +34,6 @@ public interface CCitaMapper {
 
   @Mapping(target = "lngCitaID", ignore = true)
   void actualizarCita(@MappingTarget CCita model, UpdateCitaDTO dto);
+
+  CCitaDTO toDto(CCita model);
 }

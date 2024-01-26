@@ -2,7 +2,9 @@ package org.bedu.java.backend.pet.controller;
 
 import org.bedu.java.backend.pet.dto.CCitaDTO;
 import org.bedu.java.backend.pet.dto.CCitaDTOCreate;
+import org.bedu.java.backend.pet.dto.CCitaFindByFechaHora;
 import org.bedu.java.backend.pet.dto.UpdateCitaDTO;
+import org.bedu.java.backend.pet.exception.CitaExistenteException;
 import org.bedu.java.backend.pet.exception.CitaNotFoundException;
 import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
 import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
@@ -38,7 +40,7 @@ public class CCitaController {
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public CCitaDTO Nuevo(@Valid @RequestBody CCitaDTOCreate frontInfo)
-  throws MascotaNotFoundException, VeterinarioNotFoundException {
+  throws MascotaNotFoundException, VeterinarioNotFoundException, CitaExistenteException {
     return Service.Nuevo(frontInfo);
   }
 
@@ -60,6 +62,18 @@ public class CCitaController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void update(@PathVariable Long citaId, @Valid @RequestBody UpdateCitaDTO data) throws CitaNotFoundException {
     Service.actualizarCita(citaId, data);
+  }
+
+@Operation(summary = "Buscar Cita por fecha y hora")
+@GetMapping("/buscarPorFecha")
+@ResponseStatus(HttpStatus.OK)
+public ResponseEntity<CCitaDTO> findByFechaHora(@Valid @RequestBody CCitaFindByFechaHora data) {
+    try {
+        CCitaDTO citaDTO = Service.findByDateHour(data);
+        return ResponseEntity.ok(citaDTO);
+    } catch (CitaNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
   }
 }
 
