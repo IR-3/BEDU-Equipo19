@@ -17,7 +17,13 @@ public class CCitaDTO {
   private LocalDate         clsDate;
 
   @Schema(description = "Hora de la cita.", example = "14:30:00")
-  private LocalTime         clsTime;
+  private LocalTime  clsTime;
+
+  @Schema(description = "Timepo de la cita en minutos", example = "30")
+  private int intMinutos;
+
+  @Schema(description = "Hora fin de la cita", example = "15:00:00")
+  private LocalTime clsFin;
 
   @Schema(description = "Tratamiento preescrito.", example = "Administrar 5 ml de antibiótico oral cada 12 horas durante 10 días.")
   private String            strTratamiento;

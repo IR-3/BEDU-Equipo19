@@ -50,41 +50,45 @@ public class CCitaService {
     Optional<CCita> optional = Repository.findCitaByClsDateAndClsTime(data.getClsDate(), data.getClsTime());
 
     if (optional.isPresent()) {
-        CCita cita = optional.get();
-        return Mapper.toDto(cita);
+      CCita cita = optional.get();
+      return Mapper.toDto(cita);
     } else {
-        throw new CitaNotFoundException();
+      throw new CitaNotFoundException();
     }
-}
+  }
 
   // Agrega una cita a la base de datos
   @Transactional
   public CCitaDTO Nuevo(CCitaDTOCreate frontInfo)
       throws MascotaNotFoundException, VeterinarioNotFoundException, CitaExistenteException {
-  
-      Optional<CMascota> mascota = MascotaRepo.findById(frontInfo.getLngMascotaID());
-      if (!mascota.isPresent()) {
-          throw new MascotaNotFoundException();
-      }
-  
-      Optional<CVeterinario> veterinario = VetRepo.findById(frontInfo.getLngVetID());
-      if (!veterinario.isPresent()) {
-          throw new VeterinarioNotFoundException();
-      }
-  
-      Optional<CCita> citaExistente = Repository.findCitaByClsDateAndClsTime(frontInfo.getClsDate(), frontInfo.getClsTime());
-      if (citaExistente.isPresent()) {
-          throw new CitaExistenteException();
-      }
-  
-      // Actualiza la tabla
-      CCita nuevo = Repository.save(Mapper.EnModel(frontInfo, mascota.get(), veterinario.get()));
-  
-      return Mapper.EnDTO(nuevo,
-          nuevo.getClsMascota(),
-          nuevo.getClsVeterinario());
+
+    Optional<CMascota> mascota = MascotaRepo.findById(frontInfo.getLngMascotaID());
+    if (!mascota.isPresent()) {
+      throw new MascotaNotFoundException();
+    }
+
+    Optional<CVeterinario> veterinario = VetRepo.findById(frontInfo.getLngVetID());
+    if (!veterinario.isPresent()) {
+      throw new VeterinarioNotFoundException();
+    }
+
+    LocalTime horaDeInicio = frontInfo.getClsTime();
+    int duracionEnMinutos = frontInfo.getIntMinutos();
+    LocalTime clsFin = horaDeInicio.plusMinutes(duracionEnMinutos);
+
+    List<CCita> citasSolapadas = Repository.findCitasBetweenTimes(frontInfo.getClsDate(), frontInfo.getClsTime(), clsFin);
+  if (!citasSolapadas.isEmpty()) {
+      throw new CitaExistenteException();
+}
+
+    // Actualiza la tabla
+    CCita nuevo = Repository.save(Mapper.EnModel(frontInfo, mascota.get(), veterinario.get()));
+    nuevo.setClsFin(clsFin);
+
+    return Mapper.EnDTO(nuevo,
+        nuevo.getClsMascota(),
+        nuevo.getClsVeterinario());
   }
-  
 
   // Eliminar la tabla
   @Transactional

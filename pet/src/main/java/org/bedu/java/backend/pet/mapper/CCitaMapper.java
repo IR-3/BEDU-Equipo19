@@ -27,13 +27,15 @@ public interface CCitaMapper {
   @Mapping( target = "clsMascota", source = "mascota" )
   @Mapping( target = "clsVeterinario", source = "veterinario" )
   @Mapping( target = "lngCitaID", ignore = true )
+  @Mapping(target = "clsFin", ignore = true)
   CCita EnModel(
     CCitaDTOCreate frontInfo,
     CMascota mascota,
     CVeterinario veterinario );
 
-  @Mapping(target = "lngCitaID", ignore = true)
-  void actualizarCita(@MappingTarget CCita model, UpdateCitaDTO dto);
+    @Mapping(target = "lngCitaID", ignore = true)
+    @Mapping(target = "clsFin", ignore = true) 
+    void actualizarCita(@MappingTarget CCita model, UpdateCitaDTO dto);
 
   CCitaDTO toDto(CCita model);
 }

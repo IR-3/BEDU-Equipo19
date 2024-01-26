@@ -20,8 +20,14 @@ public class CCita {
   @Column( name = "fecha", nullable = false )
   private LocalDate  clsDate;
 
-  @Column( name = "hora", nullable = false )
+  @Column( name = "hora_inicio", nullable = false )
   private LocalTime  clsTime;
+
+  @Column(name = "duracion", nullable = false)
+  private int intMinutos;
+
+  @Column(name = "hora_finalizacion")
+  private LocalTime clsFin;
 
   @Column( name = "tratamiento" )
   private String  strTratamiento;
