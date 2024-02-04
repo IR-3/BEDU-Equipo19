@@ -14,6 +14,10 @@ import org.bedu.java.backend.pet.dto.CMascotaDTOCreate;
 import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
 import org.bedu.java.backend.pet.dto.CTutorDTOCreate;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
+import org.bedu.java.backend.pet.exception.CMascotaTutorException;
+import org.bedu.java.backend.pet.exception.CitaExistenteException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 import org.bedu.java.backend.pet.service.CCitaService;
 import org.bedu.java.backend.pet.service.CMascotaService;
 import org.bedu.java.backend.pet.service.CTutorService;
@@ -25,10 +29,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.io.File;
 import java.util.Date;
-
+import java.util.logging.Logger;
 
 import org.springframework.core.io.Resource;
 import org.apache.poi.ss.usermodel.*;
@@ -39,263 +42,235 @@ import org.apache.poi.ss.usermodel.*;
 @SpringBootApplication
 public class PetApplication implements CommandLineRunner {
 
-	public static void main(String[] args) {
-		SpringApplication.run(PetApplication.class, args);
+	public static void main( String[] args ) {
+		SpringApplication.run( PetApplication.class, args );
 	}
 
-	@Autowired
-	private CTutorService cTutorService;
+	private Logger              clsLogger = Logger.getLogger( getClass().getName() );
+	private CTutorService       clsTutorService;
+	private CVeterinarioService clsVeterinarioService;
+	private CMascotaService     clsMascotaService;
+	private CCitaService        clsCitaService;
 
 	@Autowired
-	private CVeterinarioService cVeterinarioService;
+	public PetApplication( 
+		CTutorService       tutorService,
+		CVeterinarioService veterinarioService,
+		CMascotaService     mascotaService,
+		CCitaService        citaService ) {
 
-	@Autowired
-	private CMascotaService cMascotaService;
-
-	@Autowired
-	private CCitaService cCitaService;
+		clsTutorService       = tutorService;
+		clsVeterinarioService = veterinarioService;
+		clsMascotaService     = mascotaService;
+		clsCitaService        = citaService;
+	}
 
 	@Override
 	@Transactional
-	public void run(String... args) throws Exception
-	{
+	public void run( String... args )
+	throws IOException, CMascotaTutorException, MascotaNotFoundException,
+	VeterinarioNotFoundException, CitaExistenteException {
 		cargarTutores();
 		cargarMascotas();
 		cargarVeterinarios();
 		cargarCitas();
 	}
 
-	private void cargarTutores() throws IOException
-	{
+	private void cargarTutores() throws IOException {
 
-		Resource resource = new ClassPathResource("Tutores.xlsx");
+		Resource resource = new ClassPathResource( "Tutores.xlsx" );
 		File file = resource.getFile();
 
-		try (FileInputStream fileInputStream = new FileInputStream(file))
-		{
+		try( FileInputStream fileInputStream = new FileInputStream( file ) ) {
 			
-			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
-			{
-				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+			try( Workbook workbook = new XSSFWorkbook( fileInputStream ) ) {
+				Sheet sheet = workbook.getSheetAt( 0 );//hoja donde estan los datos
 
-				for(Row row : sheet)
-				{
-					if(row.getRowNum() == 0)
-					{
+				for( Row row : sheet ) {
+					if( row.getRowNum() == 0 ) {
 						continue;
 					}
 					CTutorDTOCreate tutorDTO = new CTutorDTOCreate();
 					CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
-					personaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
-					personaDTO.setStrPaterno(getStringCellValue(row.getCell(1)));
-					personaDTO.setStrMaterno(getStringCellValue(row.getCell(2)));
-					personaDTO.setStrEmail(getStringCellValue(row.getCell(3)));
-					personaDTO.setStrTelefono(getStringCellValue(row.getCell(4)));
-					tutorDTO.setClsTutor(personaDTO);
-					cTutorService.Nuevo(tutorDTO);
+					personaDTO.setStrNombre( getStringCellValue( row.getCell( 0 )) );
+					personaDTO.setStrPaterno( getStringCellValue( row.getCell( 1 )) );
+					personaDTO.setStrMaterno( getStringCellValue( row.getCell( 2 )) );
+					personaDTO.setStrEmail( getStringCellValue( row.getCell( 3 )) );
+					personaDTO.setStrTelefono( getStringCellValue( row.getCell( 4 )) );
+					tutorDTO.setClsTutor( personaDTO );
+					clsTutorService.nuevo( tutorDTO );
 				}
 			}
-		}catch (IOException e) 
-		{
-			e.printStackTrace();
-		}catch (Exception e)
-		{
+		} catch( Exception e ) {
 			e.printStackTrace();
 		}
-
 	}
 
-	private void cargarVeterinarios() throws IOException
-	{
+	private void cargarVeterinarios() throws IOException {
 
-		Resource resource = new ClassPathResource("Veterinarios.xlsx");
+		Resource resource = new ClassPathResource( "Veterinarios.xlsx" );
 		File file = resource.getFile();
 
-		try (FileInputStream fileInputStream = new FileInputStream(file))
-		{
+		try( FileInputStream fileInputStream = new FileInputStream( file ) ) {
 			
-			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
-			{
-				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+			try( Workbook workbook = new XSSFWorkbook( fileInputStream ) ) {
 
-				for(Row row : sheet)
-				{
-					if(row.getRowNum() == 0)
-					{
+				Sheet sheet = workbook.getSheetAt( 0 );//hoja donde estan los datos
+
+				for( Row row : sheet ) {
+					if( row.getRowNum() == 0 ) {
 						continue;
 					}
 
 					CVeterinarioDTOCreate veterinarioDTO = new CVeterinarioDTOCreate();
 					CPersonaDTOCreate personaDTO = new CPersonaDTOCreate();
 
-					personaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
-					personaDTO.setStrPaterno(getStringCellValue(row.getCell(1)));
-					personaDTO.setStrMaterno(getStringCellValue(row.getCell(2)));
-					personaDTO.setStrEmail(getStringCellValue(row.getCell(3)));
-					personaDTO.setStrTelefono(getStringCellValue(row.getCell(4)));
+					personaDTO.setStrNombre( getStringCellValue( row.getCell( 0 )) );
+					personaDTO.setStrPaterno( getStringCellValue( row.getCell( 1 )) );
+					personaDTO.setStrMaterno( getStringCellValue( row.getCell( 2 )) );
+					personaDTO.setStrEmail( getStringCellValue( row.getCell( 3 )) );
+					personaDTO.setStrTelefono( getStringCellValue( row.getCell( 4 )) );
 
-					veterinarioDTO.setClsPersona(personaDTO);
-					veterinarioDTO.setStrCedula(getStringCellValue(row.getCell(5)));
-					veterinarioDTO.setStrEspecialidad(getStringCellValue(row.getCell(6)));
-					
-					cVeterinarioService.Nuevo(veterinarioDTO);
+					veterinarioDTO.setClsPersona( personaDTO );
+					veterinarioDTO.setStrCedula( getStringCellValue( row.getCell( 5 )) );
+					veterinarioDTO.setStrEspecialidad( getStringCellValue( row.getCell( 6 )) );
+
+					clsVeterinarioService.nuevo( veterinarioDTO );
 				}
 			}
-		}catch (IOException e) 
-		{
-			e.printStackTrace();
-		}catch (Exception e)
-		{
+		} catch( Exception e ) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void cargarMascotas() throws IOException
-	{
+	private void cargarMascotas()
+	throws IOException, CMascotaTutorException {
 
-		Resource resource = new ClassPathResource("Mascotas.xlsx");
+		Resource resource = new ClassPathResource( "Mascotas.xlsx" );
 		File file = resource.getFile();
 
-		try (FileInputStream fileInputStream = new FileInputStream(file))
-		{
-			
-			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
-			{
-				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+		try( FileInputStream fileInputStream = new FileInputStream( file ) ) {
 
-				for(Row row : sheet)
-				{
-					if(row.getRowNum() == 0)
-					{
+			try( Workbook workbook = new XSSFWorkbook( fileInputStream ) ) {
+				Sheet sheet = workbook.getSheetAt( 0 );//hoja donde estan los datos
+
+				for( Row row : sheet ) {
+					if( row.getRowNum() == 0 ) {
 						continue;
 					}
 
 					CMascotaDTOCreate mascotaDTO = new CMascotaDTOCreate();
 
-					
-					mascotaDTO.setStrNombre(getStringCellValue(row.getCell(0)));
-					mascotaDTO.setStrEspecie(getStringCellValue(row.getCell(1)));
-					mascotaDTO.setStrRaza(getStringCellValue(row.getCell(2)));
-					String IdTutor = getStringCellValue(row.getCell(3));
-					if(IdTutor != null && !IdTutor.isEmpty())
-					{
-					mascotaDTO.setLngTutorID(Long.parseLong(IdTutor));
+					mascotaDTO.setStrNombre( getStringCellValue( row.getCell( 0 ) ) );
+					mascotaDTO.setStrEspecie( getStringCellValue( row.getCell( 1 ) ) );
+					mascotaDTO.setStrRaza( getStringCellValue( row.getCell( 2 ) ) );
+					String idTutor = getStringCellValue( row.getCell( 3 ) );
+					if( idTutor != null && !idTutor.isEmpty() ) {
+						mascotaDTO.setLngTutorID( Long.parseLong( idTutor ) );
 					}
 
-					if (mascotaDTO.getStrNombre() != null) {
-						cMascotaService.Nuevo(mascotaDTO);
+					if( mascotaDTO.getStrNombre() != null ) {
+						clsMascotaService.nuevo( mascotaDTO );
 					}
 				}
 			}
-		}catch (IOException e) 
-		{
-			e.printStackTrace();
-		}catch (Exception e)
-		{
+		} catch( Exception e ) {
 			e.printStackTrace();
 		}
 
 	}
 
-	private void cargarCitas() throws IOException
-	{
-		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-	
+	private void cargarCitas()
+	throws IOException, MascotaNotFoundException,
+	VeterinarioNotFoundException, CitaExistenteException {
 
-		Resource resource = new ClassPathResource("Citas.xlsx");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern( "MM/dd/yyyy" );
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern( "HH:mm" );
+
+		Resource resource = new ClassPathResource( "Citas.xlsx" );
 		File file = resource.getFile();
 
-		try (FileInputStream fileInputStream = new FileInputStream(file))
-		{
+		try( FileInputStream fileInputStream = new FileInputStream( file ) ) {
 			
-			try (Workbook workbook = new XSSFWorkbook(fileInputStream)) 
-			{
-				Sheet sheet = workbook.getSheetAt(0);//hoja donde estan los datos
+			try( Workbook workbook = new XSSFWorkbook( fileInputStream ) ) {
+				Sheet sheet = workbook.getSheetAt( 0 );//hoja donde estan los datos
 
-				for (Row row : sheet) {
-					if (row.getRowNum() == 0) {
+				for( Row row : sheet ) {
+					if( row.getRowNum() == 0 ) {
 						continue;
 					}
 				
 					CCitaDTOCreate citaDTO = new CCitaDTOCreate();
 				
 					// Asegúrate de que las celdas que contienen las fechas y horas no estén vacías
-					String fechaString = getStringCellValue(row.getCell(0));
-					String horaString = getStringCellValue(row.getCell(1));
+					String fechaString = getStringCellValue( row.getCell( 0 ) );
+					String horaString = getStringCellValue( row.getCell( 1 ) );
 				
-					if (fechaString != null && !fechaString.isEmpty() && horaString != null && !horaString.isEmpty()) {
-						System.out.println("Fecha: " + fechaString + ", Hora: " + horaString);
+					if( fechaString != null && !fechaString.isEmpty() && horaString != null && !horaString.isEmpty() ) {
+						String message = "Fecha: " + fechaString + ", Hora: " + horaString;
+						clsLogger.info( message );
 				
-						citaDTO.setClsDate(LocalDate.parse(fechaString, dateFormatter));
-						citaDTO.setClsTime(LocalTime.parse(horaString, timeFormatter));
+						citaDTO.setClsDate( LocalDate.parse( fechaString, dateFormatter ) );
+						citaDTO.setClsTime( LocalTime.parse( horaString, timeFormatter ) );
 					} else {
 						// Manejar el caso en que la fecha o la hora sean nulas o vacías
-						System.err.println("ADVERTENCIA: La fecha o la hora son nulas o vacías.");
+						clsLogger.info( "ADVERTENCIA: La fecha o la hora son nulas o vacías." );
 					}
 				
-					citaDTO.setStrTratamiento(getStringCellValue(row.getCell(2)));
-					String MascotaId = getStringCellValue(row.getCell(3));
-					if(MascotaId != null && !MascotaId.isEmpty())
-					{
-					citaDTO.setLngMascotaID(Long.parseLong(MascotaId));
+					citaDTO.setStrTratamiento( getStringCellValue( row.getCell( 2 )) );
+					String mascotaId = getStringCellValue( row.getCell( 3 ));
+					if( mascotaId != null && !mascotaId.isEmpty() ) {
+						citaDTO.setLngMascotaID( Long.parseLong( mascotaId ) );
 					}
-					String VeterinarioId = getStringCellValue(row.getCell(4));
-					if(VeterinarioId != null && !VeterinarioId.isEmpty())
-					{
-					citaDTO.setLngVetID(Long.parseLong(VeterinarioId));
+					String veterinarioId = getStringCellValue( row.getCell( 4 ));
+					if( veterinarioId != null && !veterinarioId.isEmpty() ) {
+						citaDTO.setLngVetID( Long.parseLong( veterinarioId ) );
 					}
-					if(citaDTO.getLngVetID() != 0)
-					{
-					cCitaService.Nuevo(citaDTO);
+					if( citaDTO.getLngVetID() != 0 ) {
+						clsCitaService.nuevo( citaDTO );
 					}
 				}
 			}
-		}catch (IOException e) 
-		{
-			e.printStackTrace();
-		}catch (Exception e)
-		{
+		} catch( Exception e )  {
 			e.printStackTrace();
 		}
-
 	}
 
 	///carga de datos celdas excel////////////////////////////////////
-	private String getStringCellValue(Cell cell) {
-		if (cell == null) {
+	private String getStringCellValue( Cell cell ) {
+		if( cell == null ) {
 			return null;
 		}
 	
-		switch (cell.getCellType()) {
+		switch( cell.getCellType() ) {
 			case STRING:
 				return cell.getStringCellValue();
 			case NUMERIC:
-				if (DateUtil.isCellDateFormatted(cell)) {
+				if( DateUtil.isCellDateFormatted( cell )) {
 					// Verificar si la celda tiene el formato de hora y no de fecha
-					if (cell.getCellStyle().getDataFormatString().contains("h:mm")) {
-						return formatTimeCell(cell.getNumericCellValue());
+					if( cell.getCellStyle().getDataFormatString().contains( "h:mm" )) {
+						return formatTimeCell( cell.getNumericCellValue() );
 					} else {
 						// Formatear la fecha según el formato original del Excel
 						Date date = cell.getDateCellValue();
-						DateFormat originalFormat = new SimpleDateFormat("MM/dd/yyyy");
-						return originalFormat.format(date);
+						DateFormat originalFormat = new SimpleDateFormat( "MM/dd/yyyy" );
+						return originalFormat.format( date );
 					}
 				} else {
 					// Si la celda es numérica pero no es una fecha, conviértela a cadena sin ".0"
 					double numericValue = cell.getNumericCellValue();
-					long longValue = (long) numericValue;
+					long longValue = ( long ) numericValue;
 	
-					if (numericValue == longValue) {
-						return String.valueOf(longValue);  // Es un número entero
+					if( numericValue == longValue ) {
+						return String.valueOf( longValue );  // Es un número entero
 					} else {
-						return String.valueOf(numericValue);  // Es un número con decimales
+						return String.valueOf( numericValue );  // Es un número con decimales
 					}
 				}
 			case BOOLEAN:
 				// Si la celda es booleana, conviértela a cadena
-				return String.valueOf(cell.getBooleanCellValue());
+				return String.valueOf( cell.getBooleanCellValue() );
 			case FORMULA:
 				// Puedes manejar fórmulas según tus requisitos
 				return cell.getCellFormula();
@@ -304,13 +279,13 @@ public class PetApplication implements CommandLineRunner {
 		}
 	}
 	
-	private String formatTimeCell(double numericValue) {
+	private String formatTimeCell( double numericValue ) {
 		// Convertir el valor numérico a horas y minutos
-		int hours = (int) (numericValue * 24);
-		int minutes = (int) ((numericValue * 24 * 60) % 60);
+		int hours = ( int ) ( numericValue * 24 );
+		int minutes = ( int ) ( (numericValue * 24 * 60 ) % 60 );
 	
 		// Formatear la hora como cadena
-		return String.format("%02d:%02d", hours, minutes);
+		return String.format( "%02d:%02d", hours, minutes );
 	}
 }
 

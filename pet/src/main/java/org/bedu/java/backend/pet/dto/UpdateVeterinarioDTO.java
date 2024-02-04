@@ -7,10 +7,7 @@ import lombok.Data;
 @Data
 public class UpdateVeterinarioDTO {
 
-    private CPersona clsPersona;
-
-    private String strCedula;
-
+    private CPersona  clsPersona;
+    private String  strCedula;
     private String  strEspecialidad;
-
 }

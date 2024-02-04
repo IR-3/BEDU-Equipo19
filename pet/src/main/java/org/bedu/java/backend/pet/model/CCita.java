@@ -23,10 +23,10 @@ public class CCita {
   @Column( name = "hora_inicio", nullable = false )
   private LocalTime  clsTime;
 
-  @Column(name = "duracion", nullable = false)
+  @Column( name = "duracion", nullable = false )
   private int intMinutos;
 
-  @Column(name = "hora_finalizacion")
+  @Column( name = "hora_finalizacion" )
   private LocalTime clsFin;
 
   @Column( name = "tratamiento" )

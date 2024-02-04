@@ -9,13 +9,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(
   componentModel = "spring",
-  injectionStrategy = InjectionStrategy.CONSTRUCTOR , nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+
 public interface CPersonaMapper {
 
   // Convierte Modelo en DTO
-  CPersonaDTO EnDTO( CPersona persona );
+  CPersonaDTO enDTO( CPersona persona );
 
   // Convierte CPersonaDTOCreate en modelo
-  CPersona EnModelo( CPersonaDTOCreate personaDTO );
+  CPersona enModelo( CPersonaDTOCreate personaDTO );
 
 }

@@ -20,52 +20,57 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "Endpoint de veterinarios", description = "CRUD de veterinarios")
+@Tag( name = "Endpoint de veterinarios", description = "CRUD de veterinarios" )
 @RestController
 @RequestMapping( "veterinarios" )
 public class CVeterinarioController {
 
-  @Autowired
-  private CVeterinarioService  Service;
+  private CVeterinarioService  clsService;
 
-  @Operation(summary = "Obtiene la lista de todos los veterinarios")
-  @GetMapping
-  @ResponseStatus( HttpStatus.OK )
-  public List<CVeterinarioDTO>  RegresarLista() {
-    return Service.RegresarLista();
+  @Autowired
+  public CVeterinarioController( CVeterinarioService service ) {
+    clsService = service;
   }
 
-  @Operation(summary = "Crea un nuevo veterinario")
+  @Operation( summary = "Obtiene la lista de todos los veterinarios" )
+  @GetMapping
+  @ResponseStatus( HttpStatus.OK )
+  public List<CVeterinarioDTO>  regresarLista() {
+    return clsService.regresarLista();
+  }
+
+  @Operation( summary = "Crea un nuevo veterinario" )
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
   public CVeterinarioDTO
-  Nuevo( @Valid @RequestBody CVeterinarioDTOCreate frontInfo )
+  nuevo( @Valid @RequestBody CVeterinarioDTOCreate frontInfo )
   throws CPersonaApellidoException, CPersonaContactoException {
 
     CPersonaDTOCreate persona = frontInfo.getClsPersona();
-    persona.ValidarApellidos();
-    persona.ValidarContacto();
-    return Service.Nuevo( frontInfo );
+    persona.validarApellidos();
+    persona.validarContacto();
+    return clsService.nuevo( frontInfo );
   }
 
-  @Operation(summary = "Borra un veterinario por medio de veterinarioId")
-  @DeleteMapping("/{veterinarioId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public ResponseEntity<String> EliminarVeterinario(@PathVariable Long veterinadoId){
-    boolean eliminado = Service.deleteById(veterinadoId);
+  @Operation( summary = "Borra un veterinario por medio de veterinarioId" )
+  @DeleteMapping( "/{veterinarioId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public ResponseEntity<String> eliminarVeterinario( @PathVariable Long veterinadoId ){
+    boolean eliminado = clsService.deleteById( veterinadoId );
 
-    if(eliminado){
-      return ResponseEntity.ok("El veterinario fue eliminado");
-    }else{
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,"El veterinario no fue encontrado");
+    if( eliminado ) {
+      return ResponseEntity.ok( "El veterinario fue eliminado");
+    } else {
+      throw new ResponseStatusException( HttpStatus.NOT_FOUND, "El veterinario no fue encontrado" );
     }
   }
 
-  @Operation(summary = "Actualiza un veterinario por medio de veterinarioId")
-  @PutMapping("/{veterinarioId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void update(@PathVariable Long veterinarioId, @Valid @RequestBody UpdateVeterinarioDTO data) throws VeterinarioNotFoundException {
-    Service.actualizarVeterinario(veterinarioId, data);
+  @Operation( summary = "Actualiza un veterinario por medio de veterinarioId" )
+  @PutMapping( "/{veterinarioId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public void update( @PathVariable Long veterinarioId, @Valid @RequestBody UpdateVeterinarioDTO data )
+  throws VeterinarioNotFoundException {
+    clsService.actualizarVeterinario( veterinarioId, data );
   }
 
 }

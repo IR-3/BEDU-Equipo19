@@ -10,16 +10,16 @@ import lombok.Data;
 @Data
 public class CVeterinarioDTOCreate {
 
-  @Schema(description = "Persona veterinario.")
+  @Schema( description = "Persona veterinario." )
   @Valid
   @NotNull( message = "Falta información de la persona" )
   @Embedded
   private CPersonaDTOCreate  clsPersona;
 
-  @Schema(description = "Cédula profesional del veterinario.", example = "12345678")
+  @Schema( description = "Cédula profesional del veterinario.", example = "12345678" )
   @NotEmpty( message = "La cedula profesionales obligatoria" )
-  private String    strCedula;
+  private String  strCedula;
 
-  @Schema(description = "Especialidad del veterinario.", example = "Cardiología veterinaria")
-  private String    strEspecialidad;
+  @Schema( description = "Especialidad del veterinario.", example = "Cardiología veterinaria" )
+  private String  strEspecialidad;
 }

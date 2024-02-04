@@ -11,21 +11,22 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(
+@Mapper( 
   componentModel = "spring",
-  injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+  injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 public interface CMascotaMapper {
 
   // Convierte Modelo en DTO
   @Mapping( target = "clsTutor", source = "tutor" )
-  CMascotaDTO EnDTO( CMascota mascota, CTutor tutor );
+  CMascotaDTO enDTO( CMascota mascota, CTutor tutor );
 
   // Convierte CreateDTO en Modelo
   @Mapping( target = "clsTutor", source = "tutor" )
   @Mapping( target = "lngMascotaID", ignore = true )
-  CMascota EnModel
+  CMascota enModel
   ( CMascotaDTOCreate frontInfo, CTutor tutor );
 
-  @Mapping(target = "lngMascotaID", ignore = true)
-  void actualizarMascota(@MappingTarget CMascota model, UpdateMascotaDTO dto);
+  @Mapping( target = "lngMascotaID", ignore = true )
+  void actualizarMascota( @MappingTarget CMascota model, UpdateMascotaDTO dto );
 }

@@ -12,26 +12,25 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(
+@Mapper( 
   componentModel = "spring",
   injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-  uses = CPersonaMapper.class,
-  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
   
 public interface CVeterinarioMapper {
 
   // Convierte Modelo en DTO
-  CVeterinarioDTO EnDTO(CVeterinario model);
+  CVeterinarioDTO enDTO( CVeterinario model );
 
   // Convierte una lista Model en lista DTO
-  List<CVeterinarioDTO> EnDTO(List<CVeterinario> model);
+  List<CVeterinarioDTO> enDTO( List<CVeterinario> model );
 
   // Convierte CreateDTO en Modelo
-  @Mapping(target = "lngVetID", ignore = true)
-  @Mapping(target = "clsPersona", source = "frontInfo.clsPersona") // Asegurar el mapeo del campo clsPersona
-  CVeterinario EnModel(CVeterinarioDTOCreate frontInfo);
+  @Mapping( target = "lngVetID", ignore = true )
+  @Mapping( target = "clsPersona", source = "frontInfo.clsPersona" ) // Asegurar el mapeo del campo clsPersona
+  CVeterinario enModel( CVeterinarioDTOCreate frontInfo );
 
-  @Mapping(target = "lngVetID", ignore = true)
-  void actualizarVeterinario(@MappingTarget CVeterinario veterinario, UpdateVeterinarioDTO dto);
+  @Mapping( target = "lngVetID", ignore = true )
+  void actualizarVeterinario( @MappingTarget CVeterinario veterinario, UpdateVeterinarioDTO dto );
 
 }

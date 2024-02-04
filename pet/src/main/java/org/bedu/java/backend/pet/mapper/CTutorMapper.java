@@ -12,26 +12,25 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
 
-@Mapper(
+@Mapper( 
   componentModel = "spring",
   injectionStrategy = InjectionStrategy.CONSTRUCTOR,
-  uses = CTutorMapper.class, 
   nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
 
 public interface CTutorMapper {
 
   // Convierte Modelo en DTO
-  CTutorDTO EnDTO( CTutor tutor );
+  CTutorDTO enDTO( CTutor tutor );
 
   // Convierte una lista Model en lista DTO
-  List<CTutorDTO> EnDTO( List<CTutor> model );
+  List<CTutorDTO> enDTO( List<CTutor> model );
 
   // Convierte CreateDTO en Modelo
   @Mapping( target = "lngTutorID", ignore = true )
-  @Mapping(target = "clsTutor", source = "frontInfo.clsTutor")
-  CTutor EnModelo( CTutorDTOCreate frontInfo );
+  @Mapping( target = "clsTutor", source = "frontInfo.clsTutor" )
+  CTutor enModelo( CTutorDTOCreate frontInfo );
 
 
-  @Mapping(target = "lngTutorID", ignore = true)
-  void actualizarTutor(@MappingTarget CTutor model, UpdateTutorDTO dto);
+  @Mapping( target = "lngTutorID", ignore = true )
+  void actualizarTutor( @MappingTarget CTutor model, UpdateTutorDTO dto );
 }

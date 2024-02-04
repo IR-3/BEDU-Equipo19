@@ -14,27 +14,27 @@ import lombok.Data;
 public class CPersonaDTOCreate {
 
   // El nombre de la persona es obligatorio
-  @Schema(description = "Nombre de la persona.", example = "Sofia")
+  @Schema( description = "Nombre de la persona.", example = "Sofia" )
   @NotEmpty( message = "El nombre no puede estar vacio" )
   private String  strNombre;
 
   // Debe existir al menos un apellido
-  @Schema(description = "Apellido paterno de la persona.", example = "Trejo")
+  @Schema( description = "Apellido paterno de la persona.", example = "Trejo" )
   private String  strPaterno;
 
-  @Schema(description = "Apellido materno de la persona.", example = "Miranda")
+  @Schema( description = "Apellido materno de la persona.", example = "Miranda" )
   private String  strMaterno;
 
   // Debe existir al menos un medio de contacto
-  @Schema(description = "Correo de la persona.", example = "sofia56@gmail.com")
+  @Schema( description = "Correo de la persona.", example = "sofia56@gmail.com" )
   @Email( message = "Error en el formato de correo electronico" )
   private String  strEmail;
 
-  @Schema(description = "Teléfono de la persona.", example = "5312453645")
+  @Schema( description = "Teléfono de la persona.", example = "5312453645" )
   private String  strTelefono;
 
   // Validar apellidos
-  public boolean ValidarApellidos()
+  public boolean validarApellidos()
   throws CPersonaApellidoException {
     if( strPaterno == null && strMaterno == null )
       throw new CPersonaApellidoException();
@@ -42,7 +42,7 @@ public class CPersonaDTOCreate {
   }
 
   // Validar medios de contacto
-  public boolean ValidarContacto()
+  public boolean validarContacto()
   throws CPersonaContactoException {
     if( strEmail == null && strTelefono == null )
       throw new CPersonaContactoException();

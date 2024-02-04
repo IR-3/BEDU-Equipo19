@@ -38,12 +38,12 @@ public class ErrorHandler {
       exception.getObjDetails() );
   }
 
-  @ExceptionHandler(Exception.class)
+  @ExceptionHandler( Exception.class )
   public ErrorDTO unknownError( Exception exception ) {
     log.error( exception.getMessage() );
     return new ErrorDTO(
       "ERR_UNKNOWN",
       "Ocurrió un error desconocido",
-      null);
+      null );
   }
 }

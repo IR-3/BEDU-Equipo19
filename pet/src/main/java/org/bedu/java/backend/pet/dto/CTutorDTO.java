@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 public class CTutorDTO {
   
-  @Schema(description = "Identificador de tutor.", example = "52")
+  @Schema( description = "Identificador de tutor.", example = "52" )
   private long  lngTutorID;
 
-  @Schema(description = "Persona, tutor de la mascota.")
+  @Schema( description = "Persona, tutor de la mascota." )
   @Embedded
   private CPersonaDTO  clsTutor;
 }

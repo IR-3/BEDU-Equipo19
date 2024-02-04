@@ -18,48 +18,53 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "Endpoint de Mascotas", description = "CRUD de mascotas")
+@Tag( name = "Endpoint de Mascotas", description = "CRUD de mascotas" )
 @RestController
 @RequestMapping( "mascotas" )
 public class CMascotaController {
 
-  @Autowired
-  private CMascotaService  Service;
+  private CMascotaService  clsService;
 
-  @Operation(summary = "Obtiene la lista de todos las mascotas")
+  @Autowired
+  public CMascotaController( CMascotaService service ) {
+    clsService = service;
+  }
+
+  @Operation( summary = "Obtiene la lista de todas las mascotas" )
   @GetMapping
   @ResponseStatus( HttpStatus.OK )
-  public List<CMascotaDTO> RegresarLista() {
-    return Service.RegresarLista();
+  public List<CMascotaDTO> regresarLista() {
+    return clsService.regresarLista();
   }
 
-  @Operation(summary = "Crea una nueva mascota")
+  @Operation( summary = "Crea una nueva mascota" )
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
-  public CMascotaDTO Nuevo
+  public CMascotaDTO nuevo
   ( @Valid @RequestBody CMascotaDTOCreate frontInfo )
   throws CMascotaTutorException {
-    return Service.Nuevo( frontInfo );
+    return clsService.nuevo( frontInfo );
   }
 
-  @Operation(summary = "Borra una mascota por medio de mascotaId")
-  @DeleteMapping("/{mascotaId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public ResponseEntity<String> eliminarMascota(@PathVariable Long mascotaId){
-    boolean eliminado = Service.deleteById(mascotaId);
+  @Operation( summary = "Borra una mascota por medio de mascotaId" )
+  @DeleteMapping( "/{mascotaId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public ResponseEntity<String> eliminarMascota( @PathVariable Long mascotaId ){
+    boolean eliminado = clsService.deleteById( mascotaId );
 
-    if(eliminado){
-      return ResponseEntity.ok("La mascota ha sido eliminada");
-    }else{
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Mascota no encontrada");
+    if( eliminado ) {
+      return ResponseEntity.ok( "La mascota ha sido eliminada" );
+    } else {
+      throw new ResponseStatusException( HttpStatus.NOT_FOUND,"Mascota no encontrada" );
     }
   }
 
-  @Operation(summary = "Actualiza mascota por medio de mascotaId")
-  @PutMapping("/{mascotaId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void update(@PathVariable Long mascotaId, @Valid @RequestBody UpdateMascotaDTO data) throws MascotaNotFoundException {
-    Service.actualizarMascota(mascotaId, data);
+  @Operation( summary = "Actualiza mascota por medio de mascotaId" )
+  @PutMapping( "/{mascotaId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public void update( @PathVariable Long mascotaId, @Valid @RequestBody UpdateMascotaDTO data )
+  throws MascotaNotFoundException {
+    clsService.actualizarMascota( mascotaId, data );
   }
 
 }

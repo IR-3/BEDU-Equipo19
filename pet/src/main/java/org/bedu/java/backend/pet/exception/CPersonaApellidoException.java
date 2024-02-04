@@ -1,7 +1,6 @@
 package org.bedu.java.backend.pet.exception;
 
-public class CPersonaApellidoException
-extends RuntimeException {
+public class CPersonaApellidoException extends RuntimeException {
 
   public CPersonaApellidoException() {
     super(

@@ -8,13 +8,8 @@ import lombok.Data;
 public class UpdateMascotaDTO {
 
   private long  lngMascotaID;
-
   private String  strNombre;
-
   private String  strEspecie;
-
   private String  strRaza;
-
-  private CTutor  clsTutor;
-    
+  private CTutor  clsTutor;    
 }

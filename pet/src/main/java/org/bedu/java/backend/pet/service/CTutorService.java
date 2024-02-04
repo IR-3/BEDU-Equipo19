@@ -18,69 +18,76 @@ import java.util.Optional;
 @Service
 public class CTutorService {
 
-  @Autowired
-  private CTutorRepository  Repository;
+  private CTutorRepository  clsRepository;
+  private CTutorMapper  clsMapper;
 
   @Autowired
-  private CTutorMapper  Mapper;
+  public CTutorService( 
+    CTutorRepository repository,
+    CTutorMapper     mapper ) {
+
+    clsRepository = repository;
+    clsMapper     = mapper;
+  }
 
   // Regresa todos los tutores
-  public List<CTutorDTO>  RegresarLista() {
-    return Mapper.EnDTO( Repository.findAll() );
+  public List<CTutorDTO>  regresarLista() {
+    return clsMapper.enDTO( clsRepository.findAll() );
   }
 
   // Agrega un tutor a la base de datos
   @Transactional
-  public CTutorDTO Nuevo( CTutorDTOCreate frontInfo ) {
-    CTutor tutor = Repository.save( Mapper.EnModelo( frontInfo ) );
-    return Mapper.EnDTO( tutor );
+  public CTutorDTO nuevo( CTutorDTOCreate frontInfo ) {
+    CTutor tutor = clsRepository.save( clsMapper.enModelo( frontInfo ) );
+    return clsMapper.enDTO( tutor );
   }
 
   @Transactional
-  public boolean deleteById(Long tutorId){
-    Optional<CTutor>tutorOptional=Repository.findById(tutorId);
+  public boolean deleteById( Long tutorId ) {
+    Optional<CTutor>tutorOptional = clsRepository.findById( tutorId );
 
-    if(tutorOptional.isPresent()){
-      Repository.delete(tutorOptional.get());
+    if( tutorOptional.isPresent() ) {
+      clsRepository.delete( tutorOptional.get() );
       return true;
-    }else{
+    }else {
       return false;
     }
   }
 
   @Transactional
-  public void actualizarTutor(Long tutorId, UpdateTutorDTO data) throws TutorNotFoundException {
-        Optional<CTutor> result = Repository.findById(tutorId);
-        if (result.isEmpty()) {
-            throw new TutorNotFoundException();
-        }
+  public void actualizarTutor( Long tutorId, UpdateTutorDTO data )
+  throws TutorNotFoundException {
 
-        CTutor tutor = result.get();
-
-        // Actualizar clsTutor solo si se proporciona en el DTO
-        if (data.getClsTutor() != null) {
-            CPersona tutorDTO = data.getClsTutor();
-            CPersona tutorPersona = tutor.getClsTutor();
-
-            // Actualizar campos individuales de clsTutor si se proporcionan
-            if (tutorDTO.getStrNombre() != null) {
-                tutorPersona.setStrNombre(tutorDTO.getStrNombre());
-            }
-            if (tutorDTO.getStrPaterno() != null) {
-                tutorPersona.setStrPaterno(tutorDTO.getStrPaterno());
-            }
-            if (tutorDTO.getStrMaterno() != null) {
-                tutorPersona.setStrMaterno(tutorDTO.getStrMaterno());
-            }
-            if (tutorDTO.getStrEmail() != null) {
-                tutorPersona.setStrEmail(tutorDTO.getStrEmail());
-            }
-            if (tutorDTO.getStrTelefono() != null) {
-                tutorPersona.setStrTelefono(tutorDTO.getStrTelefono());
-            }
-        }
-
-        Repository.save(tutor);
+    Optional<CTutor> result = clsRepository.findById( tutorId );
+    if( result.isEmpty() ) {
+      throw new TutorNotFoundException();
     }
 
+    CTutor tutor = result.get();
+
+    // Actualizar clsTutor solo si se proporciona en el DTO
+    if( data.getClsTutor() != null ) {
+      CPersona tutorDTO = data.getClsTutor();
+      CPersona tutorPersona = tutor.getClsTutor();
+
+      // Actualizar campos individuales de clsTutor si se proporcionan
+      if( tutorDTO.getStrNombre() != null ) {
+        tutorPersona.setStrNombre( tutorDTO.getStrNombre() );
+      }
+      if( tutorDTO.getStrPaterno() != null ) {
+        tutorPersona.setStrPaterno( tutorDTO.getStrPaterno() );
+      }
+      if( tutorDTO.getStrMaterno() != null ) {
+        tutorPersona.setStrMaterno( tutorDTO.getStrMaterno() );
+      }
+      if( tutorDTO.getStrEmail() != null ) {
+        tutorPersona.setStrEmail( tutorDTO.getStrEmail() );
+      }
+      if( tutorDTO.getStrTelefono() != null ) {
+        tutorPersona.setStrTelefono( tutorDTO.getStrTelefono() );
+      }
+    }
+
+    clsRepository.save( tutor );
+  }
 }

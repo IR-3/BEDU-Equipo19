@@ -20,51 +20,56 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
-@Tag(name = "Endpoint de Tutores", description = "CRUD de tutores")
+@Tag( name = "Endpoint de Tutores", description = "CRUD de tutores" )
 @RestController
 @RequestMapping( "tutores" )
 public class CTutorController {
 
-  @Autowired
-  private CTutorService Service;
+  private CTutorService clsService;
 
-  @Operation(summary = "Obtiene la lista de todos los tutores de las mascotas")
-  @GetMapping
-  @ResponseStatus( HttpStatus.OK )
-  public List<CTutorDTO> RegresarLista() {
-    return Service.RegresarLista();
+  @Autowired
+  public CTutorController( CTutorService service ) {
+    clsService = service;
   }
 
-  @Operation(summary = "Crea un nuevo tutor")
+  @Operation( summary = "Obtiene la lista de todos los tutores de las mascotas" )
+  @GetMapping
+  @ResponseStatus( HttpStatus.OK )
+  public List<CTutorDTO> regresarLista() {
+    return clsService.regresarLista();
+  }
+
+  @Operation( summary = "Crea un nuevo tutor" )
   @PostMapping
   @ResponseStatus( HttpStatus.CREATED )
-  public CTutorDTO Nuevo
+  public CTutorDTO nuevo
   ( @Valid @RequestBody CTutorDTOCreate frontInfo )
   throws CPersonaApellidoException, CPersonaContactoException {
 
     CPersonaDTOCreate persona = frontInfo.getClsTutor();
-    persona.ValidarApellidos();
-    persona.ValidarContacto();
-    return Service.Nuevo( frontInfo );
+    persona.validarApellidos();
+    persona.validarContacto();
+    return clsService.nuevo( frontInfo );
   }
 
-  @Operation(summary = "Borra un tutor por medio de tutorId")
-  @DeleteMapping("/{tutorId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public ResponseEntity<String>EliminarTutor(@PathVariable Long tutorId){
-    boolean eliminado = Service.deleteById(tutorId);
+  @Operation( summary = "Borra un tutor por medio de tutorId" )
+  @DeleteMapping( "/{tutorId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public ResponseEntity<String> eliminarTutor( @PathVariable Long tutorId ){
+    boolean eliminado = clsService.deleteById( tutorId );
 
-    if(eliminado){
-      return ResponseEntity.ok("El tutor ha sido eliminado");
-    }else{
-      throw new  ResponseStatusException(HttpStatus.NOT_FOUND, "Tutor no encontrado");
+    if( eliminado ) {
+      return ResponseEntity.ok( "El tutor ha sido eliminado" );
+    } else {
+      throw new  ResponseStatusException( HttpStatus.NOT_FOUND, "Tutor no encontrado" );
     }
   }
 
-  @Operation(summary = "Actualiza un tutor por medio de tutorId")
-  @PutMapping("/{tutorId}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void update(@PathVariable Long tutorId, @Valid @RequestBody UpdateTutorDTO data) throws TutorNotFoundException {
-    Service.actualizarTutor(tutorId, data);
+  @Operation( summary = "Actualiza un tutor por medio de tutorId" )
+  @PutMapping( "/{tutorId}" )
+  @ResponseStatus( HttpStatus.NO_CONTENT )
+  public void update( @PathVariable Long tutorId, @Valid @RequestBody UpdateTutorDTO data )
+  throws TutorNotFoundException {
+    clsService.actualizarTutor( tutorId, data );
   }
 }

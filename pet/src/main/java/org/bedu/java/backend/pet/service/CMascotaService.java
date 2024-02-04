@@ -20,51 +20,57 @@ import java.util.Optional;
 @Service
 public class CMascotaService {
 
-  @Autowired
-  private CMascotaRepository  Repository;
+  private CMascotaRepository  clsRepository;
+  private CMascotaMapper      clsMapper;
+  private CTutorRepository    clsTutorRepo;
 
   @Autowired
-  private CMascotaMapper  Mapper;
+  public CMascotaService( 
+    CMascotaRepository repository,
+    CMascotaMapper     mapper,
+    CTutorRepository   tutorRepo ) {
 
-  @Autowired
-  private CTutorRepository  TutorRepo;
+    clsRepository = repository;
+    clsMapper     = mapper;
+    clsTutorRepo  = tutorRepo;
+  }
 
 
   // Regresa todas las mascotas
-  public List<CMascotaDTO> RegresarLista() {
-    return Repository.findAll().stream()
-           .map( x -> Mapper.EnDTO( x, x.getClsTutor() ) )
+  public List<CMascotaDTO> regresarLista() {
+    return clsRepository.findAll().stream()
+           .map( x -> clsMapper.enDTO( x, x.getClsTutor() ) )
            .toList();
   }
 
 
   // Agrega una mascota a la base de datos
   @Transactional
-  public CMascotaDTO Nuevo( CMascotaDTOCreate frontInfo )
+  public CMascotaDTO nuevo( CMascotaDTOCreate frontInfo )
   throws CMascotaTutorException {
 
     // Obtiene el tutor
     Optional<CTutor> tutor;
-    tutor = TutorRepo.findById( frontInfo.getLngTutorID() );
+    tutor = clsTutorRepo.findById( frontInfo.getLngTutorID() );
     if( !tutor.isPresent() )
       throw new CMascotaTutorException();
 
     // Actualiza la tabla
-    CMascota nuevo = Repository.save
-      ( Mapper.EnModel( frontInfo, tutor.get() ) );
+    CMascota nuevo = clsRepository.save
+      ( clsMapper.enModel( frontInfo, tutor.get() ) );
 
-    return Mapper.EnDTO( nuevo, nuevo.getClsTutor() );
+    return clsMapper.enDTO( nuevo, nuevo.getClsTutor() );
   }
 
   //Eliminar la tabla
   @Transactional
   public boolean deleteById( Long mascotaId ) {
-    Optional<CMascota> mascota = Repository.findById( mascotaId );
+    Optional<CMascota> mascota = clsRepository.findById( mascotaId );
 
-    if(mascota.isPresent()){
-      Repository.delete(mascota.get());
+    if( mascota.isPresent() ){
+      clsRepository.delete( mascota.get() );
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -72,30 +78,27 @@ public class CMascotaService {
   @Transactional
   public void actualizarMascota( Long mascotaId, UpdateMascotaDTO data )
   throws MascotaNotFoundException {
-    Optional<CMascota> result = Repository.findById( mascotaId );
-    if (result.isEmpty()) {
+    Optional<CMascota> result = clsRepository.findById( mascotaId );
+    if( result.isEmpty() ) {
       throw new MascotaNotFoundException();
     }
 
     CMascota model = result.get();
 
     // Actualizar campos de mascota
-    if (data.getStrNombre() != null) {
-      model.setStrNombre(data.getStrNombre());
+    if( data.getStrNombre() != null ) {
+      model.setStrNombre( data.getStrNombre() );
     }
-    if (data.getStrEspecie() != null) {
-        model.setStrEspecie(data.getStrEspecie());
+    if( data.getStrEspecie() != null ) {
+      model.setStrEspecie( data.getStrEspecie() );
     }
-    if (data.getStrRaza() != null) {
-        model.setStrRaza(data.getStrRaza());
+    if( data.getStrRaza() != null ) {
+      model.setStrRaza( data.getStrRaza() );
+    }
+    if( data.getClsTutor() != null ) {
+      model.setClsTutor( data.getClsTutor() );
     }
 
-    if (data.getClsTutor() != null) {
-      model.setClsTutor(data.getClsTutor());
-    }
-
-    Repository.save(model);
+    clsRepository.save( model );
   }
-
-
 }

@@ -9,16 +9,16 @@ import lombok.Data;
 @Data
 public class CVeterinarioDTO {
 
-  @Schema(description = "Identificador de veterinario.", example = "32")
-  private long      lngVetID;
+  @Schema( description = "Identificador de veterinario.", example = "32" )
+  private long  lngVetID;
 
-  @Schema(description = "Persona veterinario.")
+  @Schema( description = "Persona veterinario." )
   @Embedded
   private CPersona  clsPersona;
 
-  @Schema(description = "Cédula profesional del veterinario.", example = "12345678")
-  private String    strCedula;
+  @Schema( description = "Cédula profesional del veterinario.", example = "12345678" )
+  private String  strCedula;
 
-  @Schema(description = "Especialidad del veterinario.", example = "Cardiología veterinaria")
-  private String    strEspecialidad;
+  @Schema( description = "Especialidad del veterinario.", example = "Cardiología veterinaria" )
+  private String  strEspecialidad;
 }

@@ -19,16 +19,16 @@ public class CCitaDTOCreate {
   @NotNull( message = "La hora de la cita es obligatoria" )
   private LocalTime  clsTime;
 
-  @Schema(description = "Timepo de la cita en minutos", example = "30")
-  @NotNull(message = "Ingrese la duracion de la cita en minutos")
+  @Schema( description = "Timepo de la cita en minutos", example = "30" )
+  @NotNull( message = "Ingrese la duracion de la cita en minutos" )
   private int intMinutos;
 
-  @Schema(description = "Tratamiento preescrito.", example = "Administrar 5 ml de antibiótico oral cada 12 horas durante 10 días.")
-  private String    strTratamiento;
+  @Schema( description = "Tratamiento preescrito.", example = "Administrar 5 ml de antibiótico oral cada 12 horas durante 10 días." )
+  private String  strTratamiento;
 
-  @Schema(description = "Indentificador de Mascota.")
-  private long      lngMascotaID;
+  @Schema( description = "Indentificador de Mascota." )
+  private long  lngMascotaID;
 
-  @Schema(description = "Identificador de Veterinario.")
-  private long      lngVetID;
+  @Schema( description = "Identificador de Veterinario." )
+  private long  lngVetID;
 }

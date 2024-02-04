@@ -2,9 +2,11 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id "jacoco"
+	id "org.sonarqube" version "4.4.1.3373"
 }
 
-group = 'com.example'
+group = 'org.bedu.java.backend'
 version = '0.0.1-SNAPSHOT'
 
 java {
@@ -42,4 +44,44 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+sonar {
+	properties {
+		property "sonar.projectKey", "pet"
+		property "sonar.projectName", "pet"
+		property "sonar.token", "sqp_92be4f6e3d41960e09819119009b36c8c2619ded"
+		property "sonar.host.url", "http://localhost:9000"
+	}
+}
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+	}
+
+	afterEvaluate {
+		classDirectories.setFrom( files( classDirectories.files.collect {
+			fileTree( dir: it,
+				exclude: [
+					'org/bedu/java/backend/pet/dto/**',
+					'org/bedu/java/backend/pet/model/**',
+					'org/bedu/java/backend/pet/mapper/**',
+					'org/bedu/java/backend/pet/PetApplication.class'
+				]
+			)
+		}))
+	}
+}
+
+test {
+	jacoco {
+		excludes = [
+			'org.bedu.java.backend.pet.dto.*',
+			'org.bedu.java.backend.pet.model.*',
+			'org.bedu.java.backend.pet.mapper.*',
+			'org.bedu.java.backend.pet.PetApplication.class'
+		]
+	}
 }

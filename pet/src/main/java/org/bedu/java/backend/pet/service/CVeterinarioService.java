@@ -18,80 +18,87 @@ import java.util.Optional;
 @Service
 public class CVeterinarioService {
 
-  @Autowired
-  private CVeterinarioRepository  Repository;
+  private CVeterinarioRepository  clsRepository;
+  private CVeterinarioMapper  clsMapper;
 
   @Autowired
-  private CVeterinarioMapper  Mapper;
+  public CVeterinarioService(
+    CVeterinarioRepository repository,
+    CVeterinarioMapper     mapper ) {
+
+    clsRepository = repository;
+    clsMapper     = mapper;
+  }
 
   // Regresa todos los veterinarios
-  public List<CVeterinarioDTO> RegresarLista() {
-    return Mapper.EnDTO( Repository.findAll() );
+  public List<CVeterinarioDTO> regresarLista() {
+    return clsMapper.enDTO( clsRepository.findAll() );
   }
 
   // Agrega un veterinario a la base de datos
   @Transactional
-  public CVeterinarioDTO Nuevo( CVeterinarioDTOCreate frontInfo ) {
+  public CVeterinarioDTO nuevo( CVeterinarioDTOCreate frontInfo ) {
     CVeterinario veterinario;
-    veterinario = Repository.save( Mapper.EnModel( frontInfo ) );
-    return Mapper.EnDTO( veterinario );
+    veterinario = clsRepository.save( clsMapper.enModel( frontInfo ) );
+    return clsMapper.enDTO( veterinario );
   }
 
   @Transactional
-  public boolean deleteById(Long veterinadoId){
-    Optional<CVeterinario>veterinarioOptional=Repository.findById(veterinadoId);
+  public boolean deleteById( Long veterinadoId ){
+    Optional<CVeterinario>veterinarioOptional = clsRepository.findById( veterinadoId );
 
-    if(veterinarioOptional.isPresent()){
-      Repository.delete(veterinarioOptional.get());
+    if( veterinarioOptional.isPresent() ){
+      clsRepository.delete( veterinarioOptional.get() );
       return true;
-    }else{
+    } else {
       return false;
     }
   }
 
   @Transactional
-  public void actualizarVeterinario(Long veterinarioId, UpdateVeterinarioDTO dto) throws VeterinarioNotFoundException {
-    Optional<CVeterinario> result = Repository.findById(veterinarioId);
-    if (result.isEmpty()) {
-        throw new VeterinarioNotFoundException();
+  public void actualizarVeterinario( Long veterinarioId, UpdateVeterinarioDTO dto )
+  throws VeterinarioNotFoundException {
+    Optional<CVeterinario> result = clsRepository.findById( veterinarioId );
+    if( result.isEmpty() ) {
+      throw new VeterinarioNotFoundException();
     }
 
     CVeterinario veterinario = result.get();
 
     // Actualizar clsPersona solo si se proporciona en el DTO
-    if (dto.getClsPersona() != null) {
-        CPersona personaDTO = dto.getClsPersona();
-        CPersona persona = veterinario.getClsPersona();
+    if( dto.getClsPersona() != null ) {
+      CPersona personaDTO = dto.getClsPersona();
+      CPersona persona = veterinario.getClsPersona();
 
-        // Actualizar campos individuales de clsPersona si se proporcionan
-        if (personaDTO.getStrNombre() != null) {
-            persona.setStrNombre(personaDTO.getStrNombre());
-        }
-        if (personaDTO.getStrPaterno() != null) {
-            persona.setStrPaterno(personaDTO.getStrPaterno());
-        }
-        if (personaDTO.getStrMaterno() != null) {
-            persona.setStrMaterno(personaDTO.getStrMaterno());
-        }
-        if (personaDTO.getStrEmail() != null) {
-            persona.setStrEmail(personaDTO.getStrEmail());
-        }
-        if (personaDTO.getStrTelefono() != null) {
-            persona.setStrTelefono(personaDTO.getStrTelefono());
-        }
+      // Actualizar campos individuales de clsPersona si se proporcionan
+      if( personaDTO.getStrNombre() != null ) {
+        persona.setStrNombre( personaDTO.getStrNombre() );
+      }
+      if( personaDTO.getStrPaterno() != null ) {
+        persona.setStrPaterno( personaDTO.getStrPaterno() );
+      }
+      if( personaDTO.getStrMaterno() != null ) {
+        persona.setStrMaterno( personaDTO.getStrMaterno() );
+      }
+      if( personaDTO.getStrEmail() != null ) {
+        persona.setStrEmail( personaDTO.getStrEmail() );
+      }
+      if( personaDTO.getStrTelefono() != null ) {
+        persona.setStrTelefono( personaDTO.getStrTelefono() );
+      }
     }
 
     // Actualizar strCedula si se proporciona en el DTO
-    if (dto.getStrCedula() != null) {
-        veterinario.setStrCedula(dto.getStrCedula());
+    if( dto.getStrCedula() != null ) {
+        veterinario.setStrCedula( dto.getStrCedula() );
     }
 
     // Actualizar strEspecialidad si se proporciona en el DTO
-    if (dto.getStrEspecialidad() != null) {
-        veterinario.setStrEspecialidad(dto.getStrEspecialidad());
+    if( dto.getStrEspecialidad() != null ) {
+      veterinario.setStrEspecialidad( dto.getStrEspecialidad() );
     }
 
-    Repository.save(veterinario);
+    clsRepository.save( veterinario );
   }
 
 }

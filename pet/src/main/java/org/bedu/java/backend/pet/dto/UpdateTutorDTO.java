@@ -7,6 +7,5 @@ import lombok.Data;
 @Data
 public class UpdateTutorDTO {
 
-    private CPersona clsTutor;
-    
+  private CPersona clsTutor;
 }

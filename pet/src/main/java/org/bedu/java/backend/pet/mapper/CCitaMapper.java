@@ -12,30 +12,32 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(
+@Mapper( 
   componentModel = "spring",
-  injectionStrategy = InjectionStrategy.CONSTRUCTOR, nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+  injectionStrategy = InjectionStrategy.CONSTRUCTOR,
+  nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE )
+
 public interface CCitaMapper {
 
   // Convierte Modelo en DTO
   @Mapping( target = "clsMascota", source = "mascota" )
   @Mapping( target = "clsVeterinario", source = "veterinario" )
-  CCitaDTO EnDTO
+  CCitaDTO enDTO
   ( CCita cita, CMascota mascota, CVeterinario veterinario );
 
   // Convierte CreateDTO en Modelo
   @Mapping( target = "clsMascota", source = "mascota" )
   @Mapping( target = "clsVeterinario", source = "veterinario" )
   @Mapping( target = "lngCitaID", ignore = true )
-  @Mapping(target = "clsFin", ignore = true)
-  CCita EnModel(
+  @Mapping( target = "clsFin", ignore = true )
+  CCita enModel( 
     CCitaDTOCreate frontInfo,
     CMascota mascota,
     CVeterinario veterinario );
 
-    @Mapping(target = "lngCitaID", ignore = true)
-    @Mapping(target = "clsFin", ignore = true) 
-    void actualizarCita(@MappingTarget CCita model, UpdateCitaDTO dto);
+  @Mapping( target = "lngCitaID", ignore = true )
+  @Mapping( target = "clsFin", ignore = true )
+  void actualizarCita( @MappingTarget CCita model, UpdateCitaDTO dto );
 
-  CCitaDTO toDto(CCita model);
+  CCitaDTO toDto( CCita model );
 }

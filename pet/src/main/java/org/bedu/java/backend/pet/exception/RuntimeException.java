@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class RuntimeException extends Exception {
 
-  private String  strCode;
-  private Object  objDetails;
+  private final String  strCode;
+  private final Object  objDetails;
 
   public RuntimeException
   ( String code, String message, Object details ) {

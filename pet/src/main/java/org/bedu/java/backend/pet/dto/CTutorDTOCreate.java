@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class CTutorDTOCreate {
 
-  @Schema(description = "Persona, tutor de la mascota.")
+  @Schema( description = "Persona, tutor de la mascota." )
   @Valid
   @NotNull( message = "Falta información de la persona" )
   @Embedded

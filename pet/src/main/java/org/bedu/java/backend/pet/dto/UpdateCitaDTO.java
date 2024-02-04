@@ -13,9 +13,8 @@ public class UpdateCitaDTO {
   
   private LocalDate  clsDate;
   private LocalTime  clsTime;
-  private int intMinutos;
+  private int  intMinutos;
   private String  strTratamiento;
   private CMascota  clsMascota;
   private CVeterinario  clsVeterinario;
-    
 }
