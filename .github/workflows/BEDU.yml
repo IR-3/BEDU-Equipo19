@@ -31,5 +31,8 @@ jobs:
       - name: Ejecutar Pruebas
         run: gradle test -p pet
 
+      - name: Ejecutar análisis SonarQube
+        run: ./pet/gradlew sonarqube
+
       - name: Verificación de calidad
         run: gradle check -p pet
