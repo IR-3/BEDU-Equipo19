@@ -28,3 +28,8 @@ jobs:
       - name: Compilar el proyecto
         run: gradle build -p pet
 
+      - name: Ejecutar Pruebas
+        run: gradle test -p pet
+
+      - name: Verificación de calidad
+        run: gradle check -p pet
