@@ -70,10 +70,10 @@ public class PetApplication implements CommandLineRunner {
 	public void run( String... args )
 	throws IOException, CMascotaTutorException, MascotaNotFoundException,
 	VeterinarioNotFoundException, CitaExistenteException {
-		cargarTutores();
-		cargarMascotas();
-		cargarVeterinarios();
-		cargarCitas();
+		//cargarTutores();
+		//cargarMascotas();
+		//cargarVeterinarios();
+		//cargarCitas();
 	}
 
 	private void cargarTutores() throws IOException {
