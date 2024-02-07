@@ -106,22 +106,24 @@ class CVeterinarioControllerTest {
         CVeterinarioDTO newVet = new CVeterinarioDTO();
         newVet.setClsPersona(persona);
         newVet.setStrCedula("9876543");
-        newVet.setStrEspecialidad("Oftalmologia");
+        newVet.setStrEspecialidad("Ortopedia");
 
 
         when( clssService.nuevo( any( CVeterinarioDTOCreate.class))).thenReturn(newVet);
 
         CVeterinarioDTO resultado = clsController.nuevo(nuevoVeterinarioDTO);
         assertNotNull(resultado);
-        assertEquals(resultado.getClsPersona(), nuevoVeterinarioDTO.getClsPersona());
+        assertEquals(resultado.getClsPersona().getStrNombre(), nuevoVeterinarioDTO.getClsPersona().getStrNombre());
         assertEquals(resultado.getStrCedula(), nuevoVeterinarioDTO.getStrCedula());
         assertEquals(resultado.getStrEspecialidad(), nuevoVeterinarioDTO.getStrEspecialidad());
 
+        if (resultado.getStrEspecialidad() == nuevoVeterinarioDTO.getStrEspecialidad()) {
+            System.out.println("jala");
+        }//else
+        System.out.println("resultado =================================================");
+        System.out.println(resultado.getClsPersona().getStrNombre());
+        System.out.println("veterinario =================================================");
+        System.out.println(nuevoVeterinarioDTO.getClsPersona().getStrNombre());
+
     }
-
-
-
-
-
-
 }

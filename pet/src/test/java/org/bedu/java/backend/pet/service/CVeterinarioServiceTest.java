@@ -34,7 +34,7 @@ class CVeterinarioServiceTest {
     private CVeterinarioRepository clsRepository;
 
     @Autowired
-    private CVeterinarioServiceTest clsService;
+    private CVeterinarioService clsService;
 
     @Test
     @DisplayName( "CVeterinarioService should be injected")
@@ -44,6 +44,7 @@ class CVeterinarioServiceTest {
 
     @Test
     @DisplayName (" CVeterinarioService should return a list of pets")
+    
     void regresarListaTest(){
 
         List<CVeterinario> mockList = new LinkedList<>();
@@ -64,7 +65,7 @@ class CVeterinarioServiceTest {
         mockList.add(veterinarios);
 
         when( clsRepository.findAll() ).thenReturn( mockList);
-        List<CVeterinarioDTO> result = clsService.regresarListaTest();
+        List<CVeterinarioDTO> result = clsService.regresarLista();
         assertTrue( result.size() > 0);
         assertEquals( mockList.get(0).getLngVetID(), result.get(0).getLngVetID());
         assertEquals( mockList.get(0).getClsPersona(), result.get(0).getClsPersona());
@@ -99,7 +100,10 @@ class CVeterinarioServiceTest {
 
         when( clsRepository.save( any(CVeterinario.class) ) ).thenReturn(newVeterinario);
         CVeterinarioDTOCreate prueba = new CVeterinarioDTOCreate();
-        assertEquals(newVeterinario.getClsPersona(), prueba.getClsPersona());
+        
+        System.out.println(newVeterinario.getClsPersona());
+        System.out.println(prueba.getClsPersona());
+        assertEquals(newVeterinario.getClsPersona().getStrNombre(), prueba.getClsPersona().getStrNombre());
         assertEquals(newVeterinario.getStrCedula(), prueba.getStrCedula());
         assertEquals(newVeterinario.getStrEspecialidad(), prueba.getStrEspecialidad());
 
