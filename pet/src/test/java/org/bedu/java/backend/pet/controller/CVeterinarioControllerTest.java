@@ -2,15 +2,23 @@ package org.bedu.java.backend.pet.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.bedu.java.backend.pet.dto.CVeterinarioDTO;
 import org.bedu.java.backend.pet.dto.CVeterinarioDTOCreate;
+import org.bedu.java.backend.pet.dto.UpdateVeterinarioDTO;
 import org.bedu.java.backend.pet.exception.CPersonaApellidoException;
 import org.bedu.java.backend.pet.exception.CPersonaContactoException;
+import org.bedu.java.backend.pet.exception.VeterinarioNotFoundException;
 import org.bedu.java.backend.pet.model.CPersona;
+import org.bedu.java.backend.pet.model.CVeterinario;
+import org.bedu.java.backend.pet.repository.CVeterinarioRepository;
 import org.bedu.java.backend.pet.service.CVeterinarioService;
 import org.bedu.java.backend.pet.dto.CPersonaDTO;
 import org.bedu.java.backend.pet.dto.CPersonaDTOCreate;
@@ -24,7 +32,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Optional;
+  
 @SpringBootTest
 @ExtendWith( MockitoExtension.class )
 class CVeterinarioControllerTest {
@@ -114,16 +123,32 @@ class CVeterinarioControllerTest {
         CVeterinarioDTO resultado = clsController.nuevo(nuevoVeterinarioDTO);
         assertNotNull(resultado);
         assertEquals(resultado.getClsPersona().getStrNombre(), nuevoVeterinarioDTO.getClsPersona().getStrNombre());
+        assertEquals(resultado.getClsPersona().getStrPaterno(), nuevoVeterinarioDTO.getClsPersona().getStrPaterno());
+        assertEquals(resultado.getClsPersona().getStrMaterno(), nuevoVeterinarioDTO.getClsPersona().getStrMaterno());
+        assertEquals(resultado.getClsPersona().getStrTelefono(), nuevoVeterinarioDTO.getClsPersona().getStrTelefono());
+        assertEquals(resultado.getClsPersona().getStrEmail(), nuevoVeterinarioDTO.getClsPersona().getStrEmail());
         assertEquals(resultado.getStrCedula(), nuevoVeterinarioDTO.getStrCedula());
         assertEquals(resultado.getStrEspecialidad(), nuevoVeterinarioDTO.getStrEspecialidad());
 
-        if (resultado.getStrEspecialidad() == nuevoVeterinarioDTO.getStrEspecialidad()) {
-            System.out.println("jala");
-        }//else
-        System.out.println("resultado =================================================");
-        System.out.println(resultado.getClsPersona().getStrNombre());
-        System.out.println("veterinario =================================================");
-        System.out.println(nuevoVeterinarioDTO.getClsPersona().getStrNombre());
+    }
 
+    @Test
+    @DisplayName("CVeterinarioController should update an existing Veterinarian")
+    void actualizarVeterinarioTest() throws VeterinarioNotFoundException {
+        
+        UpdateVeterinarioDTO dto = new UpdateVeterinarioDTO();
+        dto.setStrCedula("89675634");
+
+        clsController.update(399L, dto);
+        verify( clssService, times(1)).actualizarVeterinario(399L, dto);
+    }
+
+    @Test
+    @DisplayName("CVeterinarioController should delete a Veterinarian")
+    void eliminarVeterinarioTest(){
+
+        when ( clssService.deleteById( anyLong())).thenReturn(true);
+        clsController.eliminarVeterinario(1L);
+        verify( clssService, times(1)).deleteById(1L);
     }
 }
