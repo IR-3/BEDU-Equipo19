@@ -48,12 +48,12 @@ tasks.named('test') {
 }
 
 sonar {
-	properties {
-		property "sonar.projectKey", "pet"
-		property "sonar.projectName", "pet"
-		property "sonar.token", "sqp_92be4f6e3d41960e09819119009b36c8c2619ded"
-		property "sonar.host.url", "http://localhost:9000"
-	}
+	//properties {
+	//	property "sonar.projectKey", "pet"
+	//	property "sonar.projectName", "pet"
+	//	property "sonar.token", "sqp_92be4f6e3d41960e09819119009b36c8c2619ded"
+	//	property "sonar.host.url", "http://localhost:9000"
+	//}
 }
 
 jacocoTestReport {
