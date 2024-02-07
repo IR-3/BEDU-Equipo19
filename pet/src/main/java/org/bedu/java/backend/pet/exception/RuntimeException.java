@@ -8,7 +8,7 @@ import lombok.Setter;
 public class RuntimeException extends Exception {
 
   private final String  strCode;
-  private final Object  objDetails;
+  private final transient Object  objDetails;
 
   public RuntimeException
   ( String code, String message, Object details ) {

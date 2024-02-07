@@ -2,14 +2,15 @@ package org.bedu.java.backend.pet.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.bedu.java.backend.pet.dto.CMascotaDTO;
-import org.bedu.java.backend.pet.dto.CMascotaDTOCreate;
-import org.bedu.java.backend.pet.dto.CPersonaDTO;
-import org.bedu.java.backend.pet.dto.CTutorDTO;
+import org.bedu.java.backend.pet.dto.*;
 import org.bedu.java.backend.pet.exception.CMascotaTutorException;
+import org.bedu.java.backend.pet.exception.MascotaNotFoundException;
 import org.bedu.java.backend.pet.service.CMascotaService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,9 +67,14 @@ class CMascotaControllerTest {
 
     when( clsService.regresarLista() ).thenReturn( mockList );
     List<CMascotaDTO> lista = clsController.regresarLista();
-    assertEquals( mockList, lista );
+    assertTrue( lista.size() > 0 );
+    assertEquals( mockList.get(0).getLngMascotaID(), lista.get(0).getLngMascotaID() );
+    assertEquals( mockList.get(0).getStrNombre(), lista.get(0).getStrNombre() );
+    assertEquals( mockList.get(0).getStrEspecie(), lista.get(0).getStrEspecie() );
+    assertEquals( mockList.get(0).getStrRaza(), lista.get(0).getStrRaza() );
+    assertEquals( mockList.get(0).getClsTutor(), lista.get(0).getClsTutor() );
   }
-/*
+
   @Test
   @DisplayName( "CMascotaController should save a pet" )
   void nuevoTest()
@@ -86,14 +92,37 @@ class CMascotaControllerTest {
     dataBase.setStrRaza( "Japonesa" );
     dataBase.setLngMascotaID( 1 );
 
-    when( mService.nuevo( any( CMascotaDTOCreate.class ) ) )
+    when( clsService.nuevo( any( CMascotaDTOCreate.class ) ) )
       .thenReturn( dataBase );
 
-    CMascotaDTO resultado = mController.nuevo( nuevo );
+    CMascotaDTO resultado = clsController.nuevo( nuevo );
     assertNotNull( resultado );
     assertEquals( resultado.getStrNombre(), nuevo.getStrNombre() );
     assertEquals( resultado.getStrEspecie(), nuevo.getStrEspecie() );
     assertEquals( resultado.getStrRaza(), nuevo.getStrRaza() );
-  }*/
+  }
+
+  @Test
+  @DisplayName( "CMascotaController should delete a pet" )
+  void eliminarMascotaTest() {
+
+    when( clsService.deleteById( any( Long.class ) ) )
+            .thenReturn( true );
+    clsController.eliminarMascota( 1234L );
+    verify( clsService, times(1) ).deleteById( 1234L );
+  }
+
+  @Test
+  @DisplayName( "CMasctoaController should update a pet" )
+  void updateTest() throws MascotaNotFoundException {
+    UpdateMascotaDTO dto = new UpdateMascotaDTO();
+    dto.setStrNombre( "Canito" );
+    dto.setStrEspecie( "Perro" );
+    dto.setStrRaza( "Mestizo" );
+
+    clsController.update(400L, dto );
+    verify( clsService, times(1) )
+      .actualizarMascota(400L, dto );
+  }
 
 }
