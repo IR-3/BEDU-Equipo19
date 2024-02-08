@@ -49,7 +49,7 @@ public class CMascotaController {
   @Operation( summary = "Borra una mascota por medio de mascotaId" )
   @DeleteMapping( "/{mascotaId}" )
   @ResponseStatus( HttpStatus.NO_CONTENT )
-  public ResponseEntity<String> eliminarMascota( @PathVariable Long mascotaId ){
+  public ResponseEntity<String> eliminarMascota( @PathVariable Long mascotaId ) {
     boolean eliminado = clsService.deleteById( mascotaId );
 
     if( eliminado ) {

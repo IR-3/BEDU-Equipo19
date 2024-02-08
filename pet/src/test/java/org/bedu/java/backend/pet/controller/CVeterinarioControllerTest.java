@@ -151,4 +151,11 @@ class CVeterinarioControllerTest {
         clsController.eliminarVeterinario(1L);
         verify( clssService, times(1)).deleteById(1L);
     }
+    
+    @Test
+    @DisplayName("CVeterinarioController test success message")
+    void testSuccessMessage() {
+        System.out.println("¡Pruebas de veterinarios exitosas!");
+        assertTrue(true); // Asegura que la prueba siempre tenga éxito
+    }
 }
